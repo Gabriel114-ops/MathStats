@@ -45,24 +45,10 @@ body {
   }
 }
 
-h1,
-.PlsLogin,
-button,
-.NoAcc,
-.ForgotPass,
-.User,
-.Pass,
-input[type="Text"],
-input[type="password"] {
-  opacity: 0;
-  animation: fadeIn 0.6s ease-in-out forwards;
-}
-
 h1 { animation-delay: 0.15s; }
-.PlsLogin { animation-delay: 0.25s; }
+.CTC { animation-delay: 0.25s; }
 button { animation-delay: 0.35s; }
-.NoAcc, .ForgotPass { animation-delay: 0.45s; }
-.User, .Pass, input[type="Text"], input[type="password"] { animation-delay: 0.55s; }
+.Desc { animation-delay: 0.45s; }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(15px); }
@@ -70,23 +56,23 @@ button { animation-delay: 0.35s; }
 }
 
 h1 {
-  margin: 0 0 0 0 !important;
+  position: absolute !important;
   left: 50% !important;
-  top: 380px !important;
-  width: 1000px !important;
   transform: translateX(-50%) !important;
-  font-size: clamp(100px, 6vw, 64px) !important;
+  top: 50px !important;
+  width: 1000px !important;
+  font-size: clamp(150px, 6vw, 64px) !important;
   text-transform: uppercase;
   letter-spacing: 2px;
   color: var(--accent) !important;
-  text-align: center;
   font-family: "DM Serif Display", "Playfair Display", serif !important;
 }
 
-.PlsLogin {
+.CTC {
   position: absolute !important;
-  top: 480px !important;
-  left: 1112px !important;
+  top: 400px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
   margin: 0 0 32px 0;
   font-size: clamp(50px, 2.6vw, 26px);
   color: var(--text-soft);
@@ -94,14 +80,13 @@ h1 {
   font-family: "Playfair Display", serif;
 }
 
-/* Welcome message block */
-.NoAcc {
+.Desc {
   position: absolute !important;
   margin: 8px 0 20px 0 !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   width: 700px !important;
-  top: 700px !important;
+  top: 600px !important;
   font-size: clamp(40px, 2.6vw, 24px) !important;
   color: var(--text-soft) !important;
   text-align: center;
@@ -111,8 +96,9 @@ h1 {
 button {
   position: absolute !important;
   display: inline-flex;
-  left: 45%;
-  top: 900px !important;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 800px !important;
   align-items: center;
   justify-content: center;
   margin-top: 14px;
@@ -133,27 +119,16 @@ button:hover {
   transform: scale(1.04);
 }
 
-/* Hide legacy login form elements while keeping selectors intact */
-.User,
-.Pass,
-input[type="Text"],
-input[type="password"],
-#error-message,
-.ForgotPass {
-  display: none;
-}
-
-/* Decorative arc-like frame */
 .login-container::before {
   content: "";
   position: absolute;
-  top: 360px;
+  top: 340px;
   left: 50%;
   transform: translateX(-50%);
   right: 28px;
-  height: 240px;
+  height: 640px;
   width: 750px;
-  border-radius: 80px 10px 80px 10px;
+  border-radius: 80px 80px 80px 80px;
   border: 2px solid rgba(209, 58, 183, 0.6);
   box-shadow:
     0 24px 80px rgba(209, 58, 183, 0.18),
@@ -164,18 +139,17 @@ input[type="password"],
 .login-container::after {
   content: "";
   position: absolute;
-  top: 360px;
+  top: 340px;
   left: 50%;
   transform: translateX(-50%);
   right: 28px;
-  height: 240px;
+  height: 640px;
   width: 750px;
-  border-radius: 80px 10px 80px 10px;
-  background: linear-gradient(180deg, rgba(253, 177, 253, 0.8), rgba(248, 238, 248, 0));
+  border-radius: 80px 80px 80px 80px;
+  background: linear-gradient(135deg, rgba(253, 177, 253, 0.8), #fff3ff);
   z-index: -1;
 }
 
-/* Center all visible content */
 .login-container {
   text-align: center;
 }
