@@ -1,0 +1,19 @@
+body{
+    background: linear-gradient(135deg, #FBE8FB,#FFFFFF, #F0D7FF);
+}
+
+h1{
+    position: absolute;
+    top: 40px;
+    left: 1200px; 
+    font-size: 100px;
+    color: #AB4FE8;
+}
+
+.Panel{
+    position: absolute;
+    color: black;
+    padding: 10px;
+    height: 10px;
+    width: 10px;
+}
