@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Math Stats</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="DataInputPage.css">
+</head>
+
+<body>
+
+    <div class="title">MATH STATS</div>
+
+    <img src="skull.png" class="skull left" alt="skull">
+    <img src="skull.png" class="skull right" alt="skull">
+
+    <div class="card">
+
+        <div class="section-title">📊 Data Input</div>
+
+        <label for="intervalInput">Intervals (Optional)</label>
+        <input id="intervalInput" type="text" placeholder="Enter intervals separated by commas">
+        <div class="note">
+            Leave empty for ungrouped data, or enter intervals separated by commas
+        </div>
+
+        <label>Data & Frequency</label>
+        <div id="entriesContainer">
+            <div class="row">
+                <input class="data-input" type="text" placeholder="Data">
+                <input class="freq-input" type="text" placeholder="Frequency">
+                <button type="button" class="delete-btn">✕</button>
+            </div>
+        </div>
+
+        <div class="button-row">
+            <button id="addBtn" type="button" class="add-btn">+ Add Entry</button>
+            <button id="calcBtn" type="button" class="calc-btn">Calculate</button>
+            <button id="clearBtn" type="button" class="clear-btn">Clear</button>
+        </div>
+
+    </div>
+
+    <script>
+        const entriesContainer = document.getElementById("entriesContainer");
+        const addBtn = document.getElementById("addBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const calcBtn = document.getElementById("calcBtn");
+        const intervalInput = document.getElementById("intervalInput");
+
+        function createRow() {
+            const row = document.createElement("div");
+            row.className = "row";
+            row.innerHTML = `
+                <input class="data-input" type="text" placeholder="Data">
+                <input class="freq-input" type="text" placeholder="Frequency">
+                <button type="button" class="delete-btn">✕</button>
+            `;
+            return row;
+        }
+
+        function getRows() {
+            return [...entriesContainer.querySelectorAll(".row")];
+        }
+
+        function clearRowsToSingleBlank() {
+            entriesContainer.innerHTML = "";
+            entriesContainer.appendChild(createRow());
+        }
+
+        addBtn.addEventListener("click", () => {
+            entriesContainer.appendChild(createRow());
+        });
+
+        entriesContainer.addEventListener("click", (event) => {
+            const target = event.target;
+            if (!target.classList.contains("delete-btn")) return;
+            const rows = getRows();
+            if (rows.length === 1) {
+                rows[0].querySelector(".data-input").value = "";
+                rows[0].querySelector(".freq-input").value = "";
+                return;
+            }
+            target.closest(".row").remove();
+        });
+
+        clearBtn.addEventListener("click", () => {
+            intervalInput.value = "";
+            clearRowsToSingleBlank();
+        });
+
+        calcBtn.addEventListener("click", () => {
+            const rows = getRows();
+            const parsed = [];
+
+            for (let i = 0; i < rows.length; i += 1) {
+                const dataValue = rows[i].querySelector(".data-input").value.trim();
+                const freqValue = rows[i].querySelector(".freq-input").value.trim();
+                if (!dataValue && !freqValue) continue;
+
+                const x = Number(dataValue);
+                const f = Number(freqValue);
+                if (!Number.isFinite(x) || !Number.isFinite(f) || f < 0) {
+                    alert(`Invalid values on row ${i + 1}. Use numeric data and non-negative frequency.`);
+                    return;
+                }
+                parsed.push({ x, f });
+            }
+
+            if (parsed.length === 0) {
+                alert("Add at least one valid data and frequency pair.");
+                return;
+            }
+
+            const intervals = intervalInput.value
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean);
+
+            if (intervals.length > 0 && intervals.length !== parsed.length) {
+                alert("If intervals are provided, they must match the number of data/frequency rows.");
+                return;
+            }
+
+            const totalFrequency = parsed.reduce((sum, row) => sum + row.f, 0);
+            if (totalFrequency === 0) {
+                alert("Total frequency cannot be zero.");
+                return;
+            }
+
+            const sumFX = parsed.reduce((sum, row) => sum + (row.x * row.f), 0);
+            const mean = sumFX / totalFrequency;
+
+            alert(
+                `Entries: ${parsed.length}\n` +
+                `Total Frequency (Σf): ${totalFrequency}\n` +
+                `Sum of f*x (Σfx): ${sumFX}\n` +
+                `Mean: ${mean.toFixed(4)}`
+            );
+        });
+    </script>
+
+</body>
+</html>
