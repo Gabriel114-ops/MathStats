@@ -1,0 +1,53 @@
+body {
+    background: linear-gradient(180deg, #eed3fa, #DCA5F5);
+    text-align: center;
+
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertical center */
+    align-items: center;     /* horizontal center */
+}
+
+button{
+
+    position:absolute;
+    top: 300px;
+    right: 210px;
+    font-size: 20px;
+    font-family: sans-serif;
+    padding: 20px 20px;
+    border-radius: 80px;
+    background: #a26ee7;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(162, 110, 231, 0.4);
+}
+
+h1{
+    position: absolute;
+    top: 80px;
+    left: 200px;
+    font-size: 50px;
+    color: #1f1250;
+}
+h4{
+    position: absolute;
+    top: 180px;
+    left: 10px;
+    font-size: 20px;
+    color: #1f1250;
+}
+
+.Panel{
+    position: absolute;
+    padding:10px;
+    background: linear-gradient(180deg, #dea8fa 0%, #eed3fa 100%);
+    border-radius: 20px;
+    height:500px;
+    width:600px;
+    box-shadow: 0 12px 30px rgba(209, 58, 183, 0.35);
+
+}
