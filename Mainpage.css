@@ -29,10 +29,6 @@ body {
   font-family: "Source Sans 3", sans-serif;
 }
 
-@keyframes bgFade {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
 
 @keyframes slideUp {
   from {
@@ -43,7 +39,7 @@ body {
     transform: translateY(0);
     opacity: 1;
   }
-}
+}  to { opacity: 1; }
 
 h1 { animation-delay: 0.15s; }
 .CTC { animation-delay: 0.25s; }
@@ -54,7 +50,6 @@ button { animation-delay: 0.35s; }
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 h1 {
   position: absolute !important;
   left: 50% !important;
@@ -64,8 +59,14 @@ h1 {
   font-size: clamp(150px, 6vw, 64px) !important;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: var(--accent) !important;
   font-family: "DM Serif Display", "Playfair Display", serif !important;
+  background: linear-gradient(90deg, #ff3cac, #784ba0, #ff3cac);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: h1GradientShift 1s linear infinite;
 }
 
 .CTC {
@@ -75,9 +76,11 @@ h1 {
   transform: translateX(-50%) !important;
   margin: 0 0 32px 0;
   font-size: clamp(50px, 2.6vw, 26px);
-  color: var(--text-soft);
   font-weight: 500;
   font-family: "Playfair Display", serif;
+  background: linear-gradient(to left, #ff3cac, #784ba0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .Desc {
@@ -116,7 +119,12 @@ button {
 
 button:hover {
   background: linear-gradient(90deg, #a92aa0, #d84cd1);
-  transform: scale(1.04);
+  transform: translateX(-50%) scale(1.04);
+  box-shadow:
+    0 0 18px rgba(224, 94, 217, 0.9),
+    0 0 42px rgba(209, 58, 183, 0.65),
+    0 16px 36px rgba(209, 58, 183, 0.45);
+  animation: glowPulse 1.2s ease-in-out infinite alternate;
 }
 
 .login-container::before {
@@ -218,3 +226,29 @@ img,
   85% { transform: translateY(-2px) scale(1.03) rotate(-0.6deg); }
   100% { transform: translateY(0) scale(1) rotate(0deg); }
 }
+
+@keyframes glowPulse {
+  from {
+    box-shadow:
+      0 0 14px rgba(224, 94, 217, 0.7),
+      0 0 32px rgba(209, 58, 183, 0.5),
+      0 12px 28px rgba(209, 58, 183, 0.35);
+  }
+  to {
+    box-shadow:
+      0 0 22px rgba(224, 94, 217, 1),
+      0 0 56px rgba(209, 58, 183, 0.75),
+      0 20px 42px rgba(209, 58, 183, 0.5);
+  }
+}
+
+@keyframes h1GradientShift {
+  0% { background-position: 200% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+
+
+
+
