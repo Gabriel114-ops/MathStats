@@ -14,11 +14,11 @@
 
     <div class="title">MATH STATS</div>
 
-
+    
     <div class="card">
 
-         <img src="skull.png" class="skull left" alt="skull">
-        <img src="skull.png" class="skull right" alt="skull">
+        <img src="skull.png" class="skull left" alt="skull">
+        <img src="skull2.png" class="skull right" alt="skull">
 
         <div class="section-title">📊 Data Input</div>
 
@@ -73,7 +73,9 @@
         }
 
         addBtn.addEventListener("click", () => {
-            entriesContainer.appendChild(createRow());
+            const newRow = createRow();
+            entriesContainer.appendChild(newRow);
+            newRow.scrollIntoView({ behavior: "smooth", block: "start" });
         });
 
         entriesContainer.addEventListener("click", (event) => {
