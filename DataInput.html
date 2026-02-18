@@ -11,7 +11,7 @@
 </head>
 
 <body>
-
+    <div class="page-content">
     <div class="title">MATH STATS</div>
 
     
@@ -44,6 +44,25 @@
         </div>
 
     </div>
+    </div>
+
+    <div class="tutorial-overlay" id="tutorialOverlay" aria-hidden="true">
+        <div class="tutorial-scene" aria-hidden="true">
+            <div class="hud-grid"></div>
+            <div class="hud-circuit"></div>
+            <div class="hud-center">
+                <div class="ring ring-outer"></div>
+                <div class="ring ring-mid"></div>
+                <div class="ring ring-mid-2"></div>
+                <div class="ring ring-inner"></div>
+                <div class="ring ring-core"></div>
+                <div class="hud-dots"></div>
+                <div class="hud-crosshair"></div>
+            </div>
+        </div>
+        <img src="Kuromi_render.png" class="kuromi-character" alt="Kuromi character">
+        <button type="button" class="skip-btn" id="skipTutorialBtn">Skip</button>
+    </div>
 
     <script>
         const entriesContainer = document.getElementById("entriesContainer");
@@ -51,6 +70,29 @@
         const clearBtn = document.getElementById("clearBtn");
         const calcBtn = document.getElementById("calcBtn");
         const intervalInput = document.getElementById("intervalInput");
+        const tutorialOverlay = document.getElementById("tutorialOverlay");
+        const skipTutorialBtn = document.getElementById("skipTutorialBtn");
+
+        const tutorialStartDelayMs = 500;
+        const hudIntroDurationMs = 1000;
+        const hudShrinkDurationMs = 2000;
+        const tutorialOutroDurationMs = 350;
+        let phaseSmallTimerId;
+        let phaseLeftTimerId;
+
+        document.body.classList.add("tutorial-open");
+        window.setTimeout(() => {
+            tutorialOverlay.classList.add("is-active");
+            tutorialOverlay.setAttribute("aria-hidden", "false");
+            phaseSmallTimerId = window.setTimeout(() => {
+                if (!tutorialOverlay.classList.contains("is-active")) return;
+                tutorialOverlay.classList.add("phase-small");
+            }, hudIntroDurationMs);
+            phaseLeftTimerId = window.setTimeout(() => {
+                if (!tutorialOverlay.classList.contains("is-active")) return;
+                tutorialOverlay.classList.add("phase-left");
+            }, hudIntroDurationMs + hudShrinkDurationMs);
+        }, tutorialStartDelayMs);
 
         function createRow() {
             const row = document.createElement("div");
@@ -143,6 +185,18 @@
                 `Sum of f*x (Σfx): ${sumFX}\n` +
                 `Mean: ${mean.toFixed(4)}`
             );
+        });
+
+        skipTutorialBtn.addEventListener("click", () => {
+            if (!tutorialOverlay.classList.contains("is-active")) return;
+            if (phaseSmallTimerId) window.clearTimeout(phaseSmallTimerId);
+            if (phaseLeftTimerId) window.clearTimeout(phaseLeftTimerId);
+            tutorialOverlay.classList.add("is-exiting");
+            tutorialOverlay.setAttribute("aria-hidden", "true");
+            window.setTimeout(() => {
+                tutorialOverlay.classList.remove("is-active", "is-exiting", "phase-small", "phase-left");
+                document.body.classList.remove("tutorial-open");
+            }, tutorialOutroDurationMs);
         });
     </script>
 

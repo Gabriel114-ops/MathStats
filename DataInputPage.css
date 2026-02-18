@@ -6,6 +6,18 @@
     font-family: 'Poppins', sans-serif;
 }
 
+:root {
+    --c-1: #60509D;
+    --c-2: #A48ECA;
+    --c-3: #a92aa0;
+    --c-4: #d84cd1;
+    --c-1-dark: #4d3f83;
+    --c-2-light: #c5b3e2;
+    --c-3-dark: #8a1f84;
+    --c-4-light: #ea82e4;
+    --white-soft: #f6f1ff;
+}
+
 body {
     min-height: 100%;
     margin-bottom: 75px;
@@ -13,14 +25,294 @@ body {
     display: grid;
     place-items: center;
     background: #eedfed;
-    color: var(--accent);
-    animation: bgFade 0.3s ease-in-out forwards;
+    color: var(--c-1);
+    opacity: 0;
+    animation: pageFadeIn 1s ease forwards;
     font-family: "Source Sans 3", sans-serif;
 }
 
+.page-content {
+    width: 100%;
+    transition: filter 0.55s ease;
+}
+
+body.tutorial-open .page-content {
+    filter: blur(10px);
+}
+
+.tutorial-overlay {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background:
+        radial-gradient(circle at 50% 50%, rgba(85, 63, 84, 0.28), rgba(75, 71, 88, 0.88) 62%),
+        linear-gradient(135deg, rgba(169, 42, 160, 0.65), rgba(96, 80, 157, 0.85));
+    backdrop-filter: blur(1px);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, background 0.7s ease;
+}
+
+.tutorial-overlay.is-active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.tutorial-overlay.is-exiting,
+.tutorial-overlay.hide-hud {
+    background: rgba(24, 23, 31, 0.62);
+}
+
+.tutorial-overlay.is-active .tutorial-scene {
+    animation: tutorialIntro 1s ease-in-out forwards;
+}
+
+.tutorial-overlay.is-exiting .tutorial-scene {
+    animation: none;
+    opacity: 0;
+    transform: scale(0.3);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.tutorial-overlay.is-exiting .kuromi-character {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.tutorial-overlay.phase-small .tutorial-scene {
+    animation: none;
+    transform: scale(0.58);
+    opacity: 1;
+    transition: transform 0.7s ease-in-out;
+}
+
+.tutorial-overlay.phase-left .tutorial-scene {
+    transform: translateX(-25vw) scale(0.58);
+    transition: transform 0.7s ease;
+}
+
+.kuromi-character {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(33vw, 380px);
+    max-width: 42vmin;
+    height: auto;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.25);
+    filter: drop-shadow(0 12px 28px rgba(24, 23, 31, 0.45));
+    z-index: 2;
+    pointer-events: none;
+    transition: left 0.7s ease;
+}
+
+.tutorial-overlay.is-active .kuromi-character {
+    transition: left 0.7s ease;
+}
+
+.tutorial-overlay.phase-small .kuromi-character {
+    animation: kuromiIntro 0.68s cubic-bezier(0.2, 0.86, 0.2, 1) forwards;
+}
+
+.tutorial-overlay.phase-left .kuromi-character {
+    left: 25vw;
+}
+
+.tutorial-scene {
+    position: relative;
+    width: min(78vmin, 620px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow:
+        0 0 0 2px rgba(197, 179, 226, 0.24),
+        0 0 45px rgba(216, 76, 209, 0.35),
+        0 0 130px rgba(96, 80, 157, 0.35);
+    transform: scale(0.84);
+    opacity: 0.7;
+}
+
+.hud-grid,
+.hud-circuit,
+.hud-center {
+    position: absolute;
+    inset: 0;
+}
+
+.hud-grid {
+    background:
+        linear-gradient(rgba(246, 241, 255, 0.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(246, 241, 255, 0.18) 1px, transparent 1px),
+        radial-gradient(circle, rgba(164, 142, 202, 0.16) 0%, rgba(77, 63, 131, 0.2) 55%, rgba(77, 63, 131, 0.45) 100%);
+    background-size: 24px 24px, 24px 24px, 100% 100%;
+}
+
+.hud-circuit {
+    background:
+        linear-gradient(90deg, transparent 5%, rgba(197, 179, 226, 0.58) 5.4%, transparent 5.8%, transparent 24%, rgba(197, 179, 226, 0.58) 24.4%, transparent 24.8%),
+        linear-gradient(0deg, transparent 18%, rgba(234, 130, 228, 0.5) 18.3%, transparent 18.6%, transparent 44%, rgba(164, 142, 202, 0.52) 44.4%, transparent 44.8%);
+    filter: drop-shadow(0 0 8px rgba(234, 130, 228, 0.45));
+}
+
+.hud-center {
+    display: grid;
+    place-items: center;
+}
+
+.ring {
+    position: absolute;
+    border-radius: 50%;
+}
+
+.ring-outer {
+    width: 84%;
+    height: 84%;
+    border: 20px solid transparent;
+    border-top-color: rgba(246, 241, 255, 0.96);
+    border-right-color: rgba(197, 179, 226, 0.85);
+    border-bottom-color: rgba(164, 142, 202, 0.5);
+    animation: rotateCw 2.6s linear infinite;
+}
+
+.ring-mid {
+    width: 64%;
+    height: 64%;
+    border: 13px solid transparent;
+    border-top-color: rgba(234, 130, 228, 0.95);
+    border-left-color: rgba(197, 179, 226, 0.8);
+    animation: rotateCcw 2.35s linear infinite;
+}
+
+.ring-mid-2 {
+    width: 52%;
+    height: 52%;
+    border: 10px dashed rgba(96, 80, 157, 0.75);
+    border-right-color: rgba(216, 76, 209, 0.9);
+    border-top-color: rgba(164, 142, 202, 0.9);
+    animation: rotateCw 2.8s linear infinite;
+}
+
+.ring-inner {
+    width: 39%;
+    height: 39%;
+    border: 10px solid transparent;
+    border-left-color: rgba(246, 241, 255, 0.95);
+    border-top-color: rgba(234, 130, 228, 0.95);
+    animation: rotateCcw 2.2s linear infinite;
+}
+
+.ring-core {
+    width: 26%;
+    height: 26%;
+    background: radial-gradient(circle, rgba(216, 76, 209, 0.7), rgba(38, 32, 59, 0.85));
+    border: 8px solid rgba(246, 241, 255, 0.8);
+    box-shadow: 0 0 30px rgba(216, 76, 209, 0.5), inset 0 0 20px rgba(164, 142, 202, 0.75);
+}
+
+.hud-dots {
+    width: 58%;
+    height: 58%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(246, 241, 255, 0.95) 1.5px, transparent 2px);
+    background-size: 18px 18px;
+    mask-image: radial-gradient(circle, transparent 38%, black 42%, black 64%, transparent 68%);
+    opacity: 0.78;
+    animation: rotateCw 2.6s linear infinite;
+}
+
+.hud-crosshair {
+    width: 12%;
+    height: 12%;
+    border-radius: 50%;
+    background:
+        linear-gradient(rgba(164, 142, 202, 0.75) 0 0) center/2px 100% no-repeat,
+        linear-gradient(90deg, rgba(164, 142, 202, 0.75) 0 0) center/100% 2px no-repeat;
+    filter: drop-shadow(0 0 6px rgba(234, 130, 228, 0.7));
+}
+
+.skip-btn {
+    position: absolute;
+    top: 28px;
+    right: 28px;
+    border: 1px solid rgba(197, 179, 226, 0.6);
+    border-radius: 999px;
+    padding: 10px 20px;
+    color: var(--white-soft);
+    background: linear-gradient(90deg, rgba(96, 80, 157, 0.78), rgba(216, 76, 209, 0.78));
+    font-size: 15px;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    box-shadow: 0 0 16px rgba(216, 76, 209, 0.38);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.skip-btn:hover {
+    transform: scale(1.04);
+    filter: brightness(1.06);
+    box-shadow: 0 0 24px rgba(216, 76, 209, 0.55);
+}
+
+@keyframes tutorialIntro {
+    0% {
+        transform: scale(0.28);
+        opacity: 0;
+    }
+    70% {
+        transform: scale(1.28);
+        opacity: 1;
+    }
+    
+    100% {
+        transform: scale(0.58);
+        opacity: 1;
+    }
+}
+
+@keyframes tutorialOutro {
+    0% {
+        transform: scale(0.75);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.25);
+        opacity: 0;
+    }
+}
+
+@keyframes kuromiIntro {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.25);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes rotateCw {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes rotateCcw {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
+
+@keyframes pageFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+
 
 .title {
+    position: relative !important;
     top: 15px;
+    transform: translateX(32%);
     margin-top: 20px;
     margin-bottom: 20px;
     font-size: 100px;
@@ -44,18 +336,20 @@ body {
 }
 
 .skull.left {
-    left: 5%;
-    top: 18%;
+    left: -15%;
+    top: 8%;
     animation: zoom 3s ease-in-out infinite;
 }
 
 .skull.right {
-    right: 5%;
-    top: 68%;
+    right: -15%;
+    top: 78%;
     animation: zoom 4.5s ease-in-out infinite;
 }
 
 .card {
+    transform: translateX(32%);
+    margin-top: 50px;
     top: 20% ;
     width: 60%;
     height: 100%;

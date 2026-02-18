@@ -10,12 +10,10 @@
   --card-bg: #ffffff;
   --white: #ffffff;
 }
-
 html {
   margin: 0;
   height: 100%;
 }
-
 body {
   min-height: 100%;
   margin: 0;
@@ -24,10 +22,14 @@ body {
   place-items: center;
   background: #eedfed;
   color: var(--accent);
-  animation: bgFade 0.3s ease-in-out forwards;
   font-family: "Source Sans 3", sans-serif;
+  opacity: 0;
+  animation: pageFadeIn 1s ease forwards;
 }
-
+body.is-leaving {
+  pointer-events: none;
+  animation: pageFadeOut 1s ease forwards;
+}
 @keyframes slideUp {
   from {
     transform: translateY(60px);
@@ -39,15 +41,11 @@ body {
   }
 }  to { opacity: 1; }
 
-h1 { animation-delay: 0.15s; }
-.CTC { animation-delay: 0.25s; }
-button { animation-delay: 0.35s; }
-.Desc { animation-delay: 0.45s; }
-
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
 h1 {
   position: absolute !important;
   left: 2% !important;
@@ -67,7 +65,6 @@ h1 {
   -webkit-text-fill-color: transparent;
   animation: h1GradientShift 1s linear infinite;
 }
-
 .CTC {
   position: absolute !important;
   top: 35% !important;
@@ -81,7 +78,6 @@ h1 {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
 .Desc {
   position: absolute !important;
   margin: 8px 0 20px 0 !important;
@@ -118,7 +114,6 @@ button {
   cursor: pointer;
   box-shadow: 0 12px 20px rgba(209, 58, 183, 0.35);
 }
-
 button:hover {
   background: linear-gradient(90deg, #a92aa0, #d84cd1);
   transform: translateX(-50%) scale(1.04);
@@ -145,7 +140,6 @@ button:hover {
     0 8px 30px rgba(209, 58, 183, 0.12);
   pointer-events: none;
 }
-
 .login-container::after {
   content: "";
   position: absolute;
@@ -159,7 +153,6 @@ button:hover {
   background: linear-gradient(135deg, rgba(253, 177, 253, 0.8), #fff3ff);
   z-index: -1;
 }
-
 .login-container {
   text-align: center;
 }
@@ -175,7 +168,6 @@ button:hover {
   left: 70% !important;
   transform: translateX(-50%) !important;
 }
-
 .circle {
   position: relative !important;
   width: 500px;
@@ -187,7 +179,6 @@ button:hover {
   left: 50% !important;
   transform: translateX(-50%) !important;
 }
-
 .O {
   position: absolute !important;
   width: 100px;
@@ -199,7 +190,6 @@ button:hover {
   left: 16% !important;
   transform: translateX(-50%) !important;
 }
-
 .O2 {
   position: absolute !important;
   width: 100px;
@@ -211,7 +201,6 @@ button:hover {
   left: 0% !important;
   transform: translateX(-50%) !important;
 }
-
 .O3 {
   position: absolute !important;
   width: 50px;
@@ -223,7 +212,6 @@ button:hover {
   left: 40% !important;
   transform: translateX(-50%) !important;
 }
-
 .O4 {
   position: absolute !important;
   width: 50px;
@@ -235,7 +223,6 @@ button:hover {
   left: 10% !important;
   transform: translateX(-50%) !important;
 }
-
 .O5 {
   position: absolute !important;
   width: 35px;
@@ -247,7 +234,6 @@ button:hover {
   left: 4% !important;
   transform: translateX(-50%) !important;
 }
-
 .O6 {
   position: absolute !important;
   width: 20px;
@@ -259,7 +245,6 @@ button:hover {
   left: -6% !important;
   transform: translateX(-50%) !important;
 }
-
 .O7 {
   position: absolute !important;
   width: 150px;
@@ -271,7 +256,6 @@ button:hover {
   left: 2% !important;
   transform: translateX(-50%) !important;
 }
-
 .O8 {
   position: absolute !important;
   width: 50px;
@@ -339,7 +323,6 @@ button:hover {
   transform: scale(1) rotate(5deg);
   animation: walkBeat 3.0s ease-in-out infinite !important;
 }
-
 .Cloud {
   position: absolute !important;
   display: block !important;
@@ -347,7 +330,6 @@ button:hover {
   left: -11% !important;
   transform: scale(0.8) rotate(0deg);
 }
-
 .Cloud2 {
   position: absolute !important;
   display: block !important;
@@ -355,7 +337,6 @@ button:hover {
   left: 65% !important;
   transform: scale(0.7) rotate(0deg);
 }
-
 .skull {
   position: absolute !important;
   top: 14% !important;
@@ -365,7 +346,6 @@ button:hover {
   scale: 0.15;
   rotate: 20deg;
 }
-
 .skull2 {
   position: absolute !important;
   top: 28% !important;
@@ -375,7 +355,6 @@ button:hover {
   scale: 0.45;
   rotate: 20deg;
 }
-
 .divide {
   position: absolute !important;
   top: 30% !important;
@@ -417,6 +396,16 @@ button:hover {
 @keyframes h1GradientShift {
   0% { background-position: 200% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pageFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 

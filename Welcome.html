@@ -12,7 +12,7 @@
     <p class="CTC">Central Tendency Calculator</p>
   </div>
   <p class="Desc">A simple web app designed to compute mean, median, and mode instantly.</p>
-  <button type="button" onclick="window.location.href='DataInput.html'">Start Now!</button>
+  <button type="button" id="startNowBtn">Start Now!</button>
   <div class="OO"></div>
   <div class="Circle">
     <div class="circle"></div>
@@ -43,5 +43,19 @@
   <div class="divide">
       <img src="divide.png" alt="divide!">
   </div>
+  <script>
+    const startNowBtn = document.getElementById("startNowBtn");
+    const exitDurationMs = 1000;
+    let isLeaving = false;
+
+    startNowBtn.addEventListener("click", () => {
+      if (isLeaving) return;
+      isLeaving = true;
+      document.body.classList.add("is-leaving");
+      window.setTimeout(() => {
+        window.location.href = "DataInput.html";
+      }, exitDurationMs);
+    });
+  </script>
 </body>
 </html>
