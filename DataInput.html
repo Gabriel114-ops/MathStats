@@ -60,9 +60,21 @@
                 <div class="hud-crosshair"></div>
             </div>
         </div>
-        <img src="Kuromi_render.png" class="kuromi-character" alt="Kuromi character">
+        <img src="Kuromi_render.png" class="kuromi-character kuromi-character-primary" alt="Kuromi character">
+        <img src="Tut2.png" class="kuromi-character kuromi-character-secondary" alt="Kuromi character tutorial step 2">
+        <div
+            class="kuromi-dialogue kuromi-dialogue-primary"
+            id="kuromiDialogue"
+            aria-label="Kuromi dialogue text"
+        >Hello There!</div>
+        <div
+            class="kuromi-dialogue kuromi-dialogue-secondary"
+            aria-label="Kuromi tutorial dialogue text"
+        >I will give you a Quick Tutorial on how to use the calculator</div>
         <button type="button" class="skip-btn" id="skipTutorialBtn">Skip</button>
     </div>
+
+    <audio id="bgMusic" src="KBGM.mp3" preload="auto" autoplay muted playsinline></audio>
 
     <script>
         const entriesContainer = document.getElementById("entriesContainer");
@@ -72,13 +84,48 @@
         const intervalInput = document.getElementById("intervalInput");
         const tutorialOverlay = document.getElementById("tutorialOverlay");
         const skipTutorialBtn = document.getElementById("skipTutorialBtn");
+        const bgMusic = document.getElementById("bgMusic");
 
+        const targetMusicVolume = 0.1;
+        const skipMusic = new Audio("KBG.mp3");
+        skipMusic.preload = "auto";
+        skipMusic.volume = targetMusicVolume;
         const tutorialStartDelayMs = 500;
         const hudIntroDurationMs = 1000;
         const hudShrinkDurationMs = 2000;
         const tutorialOutroDurationMs = 350;
         let phaseSmallTimerId;
         let phaseLeftTimerId;
+
+        function unlockAndPlayMusic() {
+            bgMusic.muted = false;
+            bgMusic.volume = targetMusicVolume;
+            bgMusic.play().catch(() => {});
+            window.removeEventListener("pointerdown", unlockAndPlayMusic);
+            window.removeEventListener("keydown", unlockAndPlayMusic);
+        }
+
+        function tryStartBackgroundMusic() {
+            bgMusic.muted = true;
+            bgMusic.volume = targetMusicVolume;
+
+            const playPromise = bgMusic.play();
+            if (playPromise && typeof playPromise.then === "function") {
+                playPromise
+                    .then(() => {
+                        window.requestAnimationFrame(() => {
+                            bgMusic.muted = false;
+                            bgMusic.volume = targetMusicVolume;
+                        });
+                    })
+                    .catch(() => {
+                        window.addEventListener("pointerdown", unlockAndPlayMusic, { once: true });
+                        window.addEventListener("keydown", unlockAndPlayMusic, { once: true });
+                    });
+            }
+        }
+
+        tryStartBackgroundMusic();
 
         document.body.classList.add("tutorial-open");
         window.setTimeout(() => {
@@ -191,6 +238,9 @@
             if (!tutorialOverlay.classList.contains("is-active")) return;
             if (phaseSmallTimerId) window.clearTimeout(phaseSmallTimerId);
             if (phaseLeftTimerId) window.clearTimeout(phaseLeftTimerId);
+            bgMusic.pause();
+            skipMusic.currentTime = 0;
+            skipMusic.play().catch(() => {});
             tutorialOverlay.classList.add("is-exiting");
             tutorialOverlay.setAttribute("aria-hidden", "true");
             window.setTimeout(() => {

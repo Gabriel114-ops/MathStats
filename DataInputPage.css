@@ -81,6 +81,11 @@ body.tutorial-open .page-content {
     transition: opacity 0.35s ease;
 }
 
+.tutorial-overlay.is-exiting .kuromi-dialogue {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
 .tutorial-overlay.phase-small .tutorial-scene {
     animation: none;
     transform: scale(0.58);
@@ -108,16 +113,99 @@ body.tutorial-open .page-content {
     transition: left 0.7s ease;
 }
 
+.kuromi-character-secondary {
+    opacity: 0;
+}
+
+.kuromi-dialogue {
+    position: absolute;
+    left: calc(50% + min(18vw, 220px));
+    top: calc(50% - min(14vw, 150px));
+    width: fit-content;
+    max-width: min(34vw, 430px);
+    min-width: 180px;
+    padding: 16px 18px;
+    border-radius: 22px;
+    border: 2px solid rgba(246, 241, 255, 0.85);
+    background: linear-gradient(145deg, rgba(246, 241, 255, 0.95), rgba(228, 207, 227, 0.95));
+    color: #4d3f83;
+    font-size: clamp(14px, 1.25vw, 19px);
+    line-height: 1.45;
+    box-shadow: 0 12px 30px rgba(24, 23, 31, 0.28);
+    transform: translate(-50%, -50%) scale(0.72);
+    opacity: 0;
+    z-index: 3;
+    pointer-events: none;
+    outline: none;
+    transition: left 0.7s ease;
+}
+
+.kuromi-dialogue-secondary {
+    left: calc(25vw + min(18vw, 220px));
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.85);
+    pointer-events: none;
+}
+
+.kuromi-dialogue::before {
+    content: "";
+    position: absolute;
+    left: -16px;
+    top: 65%;
+    width: 20px;
+    height: 20px;
+    background: rgba(246, 241, 255, 0.96);
+    border-left: 2px solid rgba(246, 241, 255, 0.85);
+    border-bottom: 2px solid rgba(246, 241, 255, 0.85);
+    transform: rotate(35deg);
+}
+
+.kuromi-dialogue:empty::after {
+    content: "Type Kuromi's message here...";
+    color: rgba(77, 63, 131, 0.55);
+}
+
+.tutorial-overlay.is-active .kuromi-dialogue {
+    pointer-events: auto;
+}
+
+.tutorial-overlay.is-active .kuromi-dialogue-secondary {
+    pointer-events: none;
+}
+
 .tutorial-overlay.is-active .kuromi-character {
     transition: left 0.7s ease;
 }
 
-.tutorial-overlay.phase-small .kuromi-character {
-    animation: kuromiIntro 0.68s cubic-bezier(0.2, 0.86, 0.2, 1) forwards;
+.tutorial-overlay.phase-small .kuromi-character-primary {
+    animation: kuromiIntro 1s cubic-bezier(0.2, 0.86, 0.2, 1) forwards;
+}
+
+.tutorial-overlay.phase-small .kuromi-dialogue-primary {
+    animation: kuromiDialogueIn 0.9s 1s cubic-bezier(0.2, 0.86, 0.2, 1) forwards;
 }
 
 .tutorial-overlay.phase-left .kuromi-character {
     left: 25vw;
+}
+
+.tutorial-overlay.phase-left .kuromi-character-primary {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    animation: kuromiCharacterSwapOut 0.14s 0.72s ease forwards;
+}
+
+.tutorial-overlay.phase-left .kuromi-character-secondary {
+    animation: kuromiCharacterSwapIn 0.45s 0.82s cubic-bezier(0.2, 0.86, 0.2, 1) forwards;
+}
+
+.tutorial-overlay.phase-left .kuromi-dialogue-primary {
+    animation: kuromiDialogueOut 0.45s ease forwards;
+    pointer-events: none;
+}
+
+.tutorial-overlay.phase-left .kuromi-dialogue-secondary {
+    animation: kuromiDialogueLeftIn 0.7s 1.2s cubic-bezier(0.2, 0.86, 0.2, 1) forwards;
 }
 
 .tutorial-scene {
@@ -285,6 +373,63 @@ body.tutorial-open .page-content {
     0% {
         opacity: 0;
         transform: translate(-50%, -50%) scale(0.25);
+    }
+    65% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(2);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes kuromiCharacterSwapOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes kuromiCharacterSwapIn {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes kuromiDialogueIn {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.6);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes kuromiDialogueOut {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -52%) scale(0.85);
+    }
+}
+
+@keyframes kuromiDialogueLeftIn {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -52%) scale(0.82);
     }
     100% {
         opacity: 1;
@@ -506,5 +651,30 @@ input:focus {
 @keyframes zoom {
     0% { transform: scale(1) rotate(0deg); }
     50% { transform: scale(1.25) rotate(360deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+@media (max-width: 900px) {
+    .kuromi-dialogue {
+        left: 50%;
+        top: calc(50% - min(30vw, 210px));
+        max-width: min(82vw, 460px);
+        min-width: 150px;
+    }
+
+    .kuromi-dialogue::before {
+        left: 26px;
+        top: calc(100% - 4px);
+        transform: rotate(45deg);
+    }
+
+    .tutorial-overlay.phase-left .kuromi-dialogue-secondary {
+        left: 50%;
+    }
+}
+
+@keyframes zoomBubble {
+    0% { transform: scale(1) rotate(0deg); }
+    60% { transform: scale(1.25) rotate(10deg); }
     100% { transform: scale(1) rotate(0deg); }
 }
