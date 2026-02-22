@@ -1,19 +1,149 @@
-.result-page {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  padding: 10px;
+html{
+  background-color: #A48ECA;
+}
+
+.Title {
+position: relative;
+font-size: 50px;
+left: 80px;
+color: #a48eca;
+-webkit-text-stroke: 1px #60509D;
+}
+
+.result-page{
+  position: absolute;
   background-color: #EDDDE8;
-  min-height: 100vh;
+  border: solid 10px#60509D;
+  border-radius: 50px;
+  width: 80%;
+  height:3900px;
+  left:400px;
+  top:80px;
 }
 
-.result-page > h1 {
-  grid-column: 1 / -1;
+.inner-page{
+  position: relative;
+  background-color: #FFFFFF;
+  border-radius: 50px;
+  width: 2300px;
+  height:2100px;
+  left: 70px;
+}
+
+
+.panels{
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 30px;
+  left: 130px;
+  height: 950px;
+  width: 90%;
+}
+
+.summary-title{
+position: relative;
+font-size: 50px;
+left: 80px;
+color: #a48eca;
+  -webkit-text-stroke: 1px #60509D;
+}
+
+.panel1{
+  background-color: #A48ECA;
+  color: #FCDCAA;
+  -webkit-text-stroke: 1px #4c407a;
+  float: left;
+  border-radius: 50px;
+}
+
+.panel2{
+  background-color: #7658B2;
+  color: #D0b899;
+  -webkit-text-stroke: 1px #4c407a;
+  float: right;
+  border-radius: 50px;
+}
+
+.panel3{
+  background-color: #60509D;
+  color: #EDDDE8;
+  -webkit-text-stroke: 1px #4c407a;
+  float: left;
+  border-radius: 50px;
+}
+
+.panel4{
+  background-color: #6d588b;
+  color: #EDE2DD;
+  -webkit-text-stroke: 1px #4c407a;
+  float: right;
+  border-radius: 50px;
+}
+
+p{
+  position: relative;
+  text-align: center;
+  font-size: 30px;
+  top:40px;
+  font-family: "TitanOne";
+  text-align: center;
+}
+
+button{
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  display: flex;
+  left: 43.5%;
+  background-color: #7658B2;
+  color: white;
+  top: 70px;
+  width: 350px;
+  height:130px;
+  border-radius: 80px;
+  border: 8px solid #4c407a;
+  font-family: "TitanOne";
+  -webkit-text-stroke: 3px #4c407a;
+}
+
+@font-face {
+  font-family: TitanOne;
+  src: url(TitanOne-Regular.ttf);
+}
+
+h1{
+
+  font-family: "TitanOne";
+}
+
+h4{
+  font-family: "TitanOne";
+}
+
+h5{
+  font-family: "TitanOne";
+}
+
+.panel1 h1, .panel2 h1, .panel3 h1, .panel4 h1{
+  margin-left: 100px;
+  font-size: 80px;
+
+}
+
+.panel1 h4, .panel2 h4, .panel3 h4, .panel4 h4{
+  margin-left: 100px;
+  font-size: 50px;
+}
+
+.panel1 h5, .panel2 h5, .panel3 h5, .panel4 h5{
+  position: relative;
+  right:20px;
+  bottom: 200px;
   margin: 0;
-  color: #00223d;
-}
+  left: 700px;
+  font-size: 150px;
+  line-height: 1;
 
-.panel1 { background: red; height: 500px; }
-.panel2 { background: blue; height: 500px; }
-.panel3 { background: yellow; height: 500px; }
-.panel4 { background: green; height: 500px; }
+}
