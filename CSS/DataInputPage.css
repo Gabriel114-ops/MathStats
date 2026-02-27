@@ -147,6 +147,14 @@ body.tutorial-open .page-content {
     pointer-events: none;
 }
 
+.kuromi-dialogue-guided {
+    left: calc(25vw + min(18vw, 220px));
+    opacity: 0;
+    transform: translate(-50%, -52%) scale(0.82);
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
 .kuromi-dialogue::before {
     content: "";
     position: absolute;
@@ -206,6 +214,170 @@ body.tutorial-open .page-content {
 
 .tutorial-overlay.phase-left .kuromi-dialogue-secondary {
     animation: kuromiDialogueLeftIn 0.7s 1.2s cubic-bezier(0.2, 0.86, 0.2, 1) forwards;
+}
+
+.tutorial-overlay.phase-guided .kuromi-dialogue-secondary {
+    animation: none;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.tutorial-overlay.phase-guided .kuromi-dialogue-guided {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.tutorial-demo-wrap {
+    position: absolute;
+    right: 13.5vw;
+    top: 50%;
+    width: min(44vw, 620px);
+    transform: translateY(-50%);
+    z-index: 4;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+.tutorial-overlay.phase-guided .tutorial-demo-wrap {
+    opacity: 1;
+}
+
+.tutorial-demo {
+    display: none;
+    border: 2px solid rgba(246, 241, 255, 0.75);
+    border-radius: 18px;
+    padding: 18px 20px;
+    background: linear-gradient(165deg, rgba(246, 241, 255, 0.97), rgba(224, 199, 231, 0.94));
+    color: #4d3f83;
+    box-shadow: 0 14px 34px rgba(24, 23, 31, 0.28);
+}
+
+.tutorial-overlay.step-interval .tutorial-demo-interval,
+.tutorial-overlay.step-data .tutorial-demo-data,
+.tutorial-overlay.step-actions .tutorial-demo-actions {
+    display: block;
+}
+
+.tutorial-demo-title {
+    font-size: clamp(17px, 1.4vw, 22px);
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #8a1f84;
+}
+
+.tutorial-demo-label {
+    display: block;
+    margin-top: 6px;
+    margin-left: 0;
+    font-size: 17px;
+}
+
+.tutorial-fake-input {
+    margin-top: 8px;
+    border: 2px solid #b14fd4;
+    border-radius: 12px;
+    min-height: 48px;
+    background: #f1e8f4;
+    padding: 9px 11px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.typing-caret {
+    width: 2px;
+    height: 30px;
+    background: #8a1f84;
+    animation: blinkCaret 0.7s steps(1) infinite;
+}
+
+.tutorial-demo-note {
+    margin-top: 9px;
+    font-size: 14px;
+    color: #5e487e;
+}
+
+.tutorial-fake-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 88px;
+    align-items: center;
+    gap: 8px;
+    margin-top: 7px;
+    padding: 8px 10px;
+    border: 1px solid rgba(96, 80, 157, 0.28);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.62);
+    min-height: 52px;
+}
+
+.tutorial-row-header {
+    font-size: 13px;
+    font-weight: 600;
+    color: #7b2e83;
+}
+
+.tutorial-row-value {
+    font-size: 21px;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.tutorial-row-value.is-removing {
+    opacity: 0.18;
+    transform: translateX(18px);
+}
+
+.tutorial-remove-btn {
+    border: 2px solid #ff69b4;
+    border-radius: 10px;
+    background: #f2f2f2;
+    color: #8a1f84;
+    height: 40px;
+    font-size: 20px;
+}
+
+.tutorial-row-value.is-removing .tutorial-remove-btn {
+    animation: removePulse 0.32s ease 1;
+}
+
+.tutorial-action-row {
+    margin-top: 6px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.tutorial-action-btn {
+    height: 52px;
+    border-radius: 10px;
+    border: 2px solid #b14fd4;
+    font-size: clamp(14px, 1.1vw, 18px);
+    color: #7b2e83;
+}
+
+.tutorial-add-btn,
+.tutorial-clear-btn {
+    background: #ece4ef;
+}
+
+.tutorial-calc-btn {
+    border: 0;
+    color: #fff;
+    background: linear-gradient(90deg, #ff3cac 0%, #784ba0 50%, #ff3cac 100%);
+    background-size: 180% 100%;
+}
+
+.tutorial-overlay.step-actions .tutorial-add-btn {
+    animation: actionPulse 1.7s ease-in-out infinite;
+}
+
+.tutorial-overlay.step-actions .tutorial-clear-btn {
+    animation: actionPulse 1.7s 0.35s ease-in-out infinite;
+}
+
+.tutorial-overlay.step-actions .tutorial-calc-btn {
+    animation: actionPulse 1.7s 0.7s ease-in-out infinite, calcShift 1.7s 0.7s linear infinite;
 }
 
 .tutorial-scene {
@@ -447,6 +619,27 @@ body.tutorial-open .page-content {
     to { transform: rotate(0deg); }
 }
 
+@keyframes blinkCaret {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+@keyframes removePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.18); }
+    100% { transform: scale(1); }
+}
+
+@keyframes actionPulse {
+    0%, 100% { transform: translateY(0); box-shadow: 0 0 0 rgba(216, 76, 209, 0); }
+    40% { transform: translateY(-3px); box-shadow: 0 8px 16px rgba(216, 76, 209, 0.34); }
+}
+
+@keyframes calcShift {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
 @keyframes pageFadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -670,6 +863,30 @@ input:focus {
 
     .tutorial-overlay.phase-left .kuromi-dialogue-secondary {
         left: 50%;
+    }
+
+    .kuromi-dialogue-guided {
+        left: 50%;
+    }
+
+    .tutorial-demo-wrap {
+        right: 56%;
+        top: calc(50% + min(34vw, 220px));
+        transform: translate(50%, -50%);
+        width: min(88vw, 560px);
+    }
+
+    .tutorial-fake-input {
+        font-size: 20px;
+        min-height: 44px;
+    }
+
+    .tutorial-fake-row {
+        grid-template-columns: 1fr 1fr 72px;
+    }
+
+    .tutorial-remove-btn {
+        font-size: 17px;
     }
 }
 

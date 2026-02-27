@@ -71,10 +71,48 @@
             class="kuromi-dialogue kuromi-dialogue-secondary"
             aria-label="Kuromi tutorial dialogue text"
         >I will give you a Quick Tutorial on how to use the calculator</div>
+        <div
+            class="kuromi-dialogue kuromi-dialogue-guided"
+            id="kuromiGuidedDialogue"
+            aria-label="Kuromi guided tutorial dialogue text"
+        ></div>
+        <div class="tutorial-demo-wrap" id="tutorialDemoWrap" aria-hidden="true">
+            <div class="tutorial-demo tutorial-demo-interval">
+                <div class="tutorial-demo-title">Intervals Example</div>
+                <label class="tutorial-demo-label" for="intervalTypingText">Intervals (Optional)</label>
+                <div class="tutorial-fake-input" aria-hidden="true">
+                    <span id="intervalTypingText"></span><span class="typing-caret"></span>
+                </div>
+                <p class="tutorial-demo-note">Use comma-separated ranges like <strong>10-19, 20-29, 30-39</strong>.</p>
+            </div>
+            <div class="tutorial-demo tutorial-demo-data">
+                <div class="tutorial-demo-title">Data & Frequency</div>
+                <div class="tutorial-fake-row tutorial-row-header">
+                    <span>Data</span>
+                    <span>Frequency</span>
+                    <span>Remove</span>
+                </div>
+                <div class="tutorial-fake-row tutorial-row-value" id="tutorialDataRow">
+                    <span id="dataTypingText"></span>
+                    <span id="freqTypingText"></span>
+                    <button type="button" class="tutorial-remove-btn" aria-label="Remove entry example">X</button>
+                </div>
+                <p class="tutorial-demo-note">Fill each row with numbers, and click <strong>X</strong> to remove an entry.</p>
+            </div>
+            <div class="tutorial-demo tutorial-demo-actions">
+                <div class="tutorial-demo-title">Action Buttons</div>
+                <div class="tutorial-action-row">
+                    <button type="button" class="tutorial-action-btn tutorial-add-btn">+ Add Entry</button>
+                    <button type="button" class="tutorial-action-btn tutorial-clear-btn">Clear</button>
+                    <button type="button" class="tutorial-action-btn tutorial-calc-btn">Calculate</button>
+                </div>
+                <p class="tutorial-demo-note"><strong>Add Entry</strong> creates a row, <strong>Clear</strong> resets inputs, <strong>Calculate</strong> solves.</p>
+            </div>
+        </div>
         <button type="button" class="skip-btn" id="skipTutorialBtn">Skip</button>
     </div>
 
-    <audio id="bgMusic" src="KBGM.mp3" preload="auto" autoplay muted playsinline></audio>
+    <audio id="bgMusic" src="/MathStats/KBGM.mp3" preload="auto" autoplay muted playsinline></audio>
 
     <script>
         const entriesContainer = document.getElementById("entriesContainer");
@@ -85,18 +123,43 @@
         const TABLE_DATA_KEY = "mathStatsTableData";
         const tutorialOverlay = document.getElementById("tutorialOverlay");
         const skipTutorialBtn = document.getElementById("skipTutorialBtn");
+        const kuromiGuidedDialogue = document.getElementById("kuromiGuidedDialogue");
+        const tutorialDemoWrap = document.getElementById("tutorialDemoWrap");
+        const intervalTypingText = document.getElementById("intervalTypingText");
+        const dataTypingText = document.getElementById("dataTypingText");
+        const freqTypingText = document.getElementById("freqTypingText");
+        const tutorialDataRow = document.getElementById("tutorialDataRow");
         const bgMusic = document.getElementById("bgMusic");
 
         const targetMusicVolume = 0.1 ;
-        const skipMusic = new Audio("KBG.mp3");
+        const skipMusic = new Audio("/MathStats/KBG.mp3");
         skipMusic.preload = "auto";
         skipMusic.volume = targetMusicVolume;
         const tutorialStartDelayMs = 500;
         const hudIntroDurationMs = 1000;
         const hudShrinkDurationMs = 2000;
         const tutorialOutroDurationMs = 350;
+        const guidedTutorialDelayMs = 2100;
         let phaseSmallTimerId;
         let phaseLeftTimerId;
+        let guidedPhaseTimerId;
+        let guidedLoopTimerId;
+        let guidedStepIndex = -1;
+
+        const guidedSteps = [
+            {
+                className: "step-interval",
+                dialogue: "Step 1: Type intervals as ranges separated by commas. Click anywhere to continue."
+            },
+            {
+                className: "step-data",
+                dialogue: "Step 2: Enter Data and Frequency values. Use X when you want to remove a row."
+            },
+            {
+                className: "step-actions",
+                dialogue: "Step 3: Use + Add Entry, Clear, and Calculate. Click anywhere to start using the page."
+            }
+        ];
 
         function unlockAndPlayMusic() {
             bgMusic.muted = false;
@@ -140,7 +203,123 @@
                 if (!tutorialOverlay.classList.contains("is-active")) return;
                 tutorialOverlay.classList.add("phase-left");
             }, hudIntroDurationMs + hudShrinkDurationMs);
+            guidedPhaseTimerId = window.setTimeout(() => {
+                if (!tutorialOverlay.classList.contains("is-active")) return;
+                tutorialOverlay.classList.add("phase-guided");
+                tutorialDemoWrap.setAttribute("aria-hidden", "false");
+                setGuidedStep(0);
+            }, hudIntroDurationMs + hudShrinkDurationMs + guidedTutorialDelayMs);
         }, tutorialStartDelayMs);
+
+        function clearGuidedLoopTimer() {
+            if (!guidedLoopTimerId) return;
+            window.clearTimeout(guidedLoopTimerId);
+            guidedLoopTimerId = undefined;
+        }
+
+        function typeInto(element, value, speed = 95, onDone) {
+            clearGuidedLoopTimer();
+            element.textContent = "";
+            let charIndex = 0;
+
+            function tick() {
+                if (!tutorialOverlay.classList.contains("phase-guided")) return;
+                if (guidedStepIndex < 0) return;
+                if (charIndex < value.length) {
+                    element.textContent += value[charIndex];
+                    charIndex += 1;
+                    guidedLoopTimerId = window.setTimeout(tick, speed);
+                    return;
+                }
+                if (typeof onDone === "function") onDone();
+            }
+
+            tick();
+        }
+
+        function runIntervalAnimation() {
+            typeInto(intervalTypingText, "10-19, 20-29, 30-39", 90, () => {
+                guidedLoopTimerId = window.setTimeout(() => {
+                    if (guidedStepIndex !== 0) return;
+                    runIntervalAnimation();
+                }, 850);
+            });
+        }
+
+        function runDataAnimation() {
+            tutorialDataRow.classList.remove("is-removing");
+            typeInto(dataTypingText, "45", 130, () => {
+                typeInto(freqTypingText, "3", 180, () => {
+                    guidedLoopTimerId = window.setTimeout(() => {
+                        if (guidedStepIndex !== 1) return;
+                        tutorialDataRow.classList.add("is-removing");
+                        guidedLoopTimerId = window.setTimeout(() => {
+                            if (guidedStepIndex !== 1) return;
+                            dataTypingText.textContent = "";
+                            freqTypingText.textContent = "";
+                            tutorialDataRow.classList.remove("is-removing");
+                            guidedLoopTimerId = window.setTimeout(() => {
+                                if (guidedStepIndex !== 1) return;
+                                runDataAnimation();
+                            }, 250);
+                        }, 500);
+                    }, 650);
+                });
+            });
+        }
+
+        function setGuidedStep(nextStepIndex) {
+            if (nextStepIndex < 0 || nextStepIndex >= guidedSteps.length) return;
+            clearGuidedLoopTimer();
+            guidedStepIndex = nextStepIndex;
+            tutorialOverlay.classList.remove("step-interval", "step-data", "step-actions");
+            tutorialOverlay.classList.add(guidedSteps[nextStepIndex].className);
+            kuromiGuidedDialogue.textContent = guidedSteps[nextStepIndex].dialogue;
+            if (nextStepIndex === 0) {
+                dataTypingText.textContent = "";
+                freqTypingText.textContent = "";
+                tutorialDataRow.classList.remove("is-removing");
+                runIntervalAnimation();
+                return;
+            }
+            if (nextStepIndex === 1) {
+                intervalTypingText.textContent = "";
+                runDataAnimation();
+                return;
+            }
+            intervalTypingText.textContent = "";
+            dataTypingText.textContent = "";
+            freqTypingText.textContent = "";
+            tutorialDataRow.classList.remove("is-removing");
+        }
+
+        function closeTutorial() {
+            if (!tutorialOverlay.classList.contains("is-active")) return;
+            if (phaseSmallTimerId) window.clearTimeout(phaseSmallTimerId);
+            if (phaseLeftTimerId) window.clearTimeout(phaseLeftTimerId);
+            if (guidedPhaseTimerId) window.clearTimeout(guidedPhaseTimerId);
+            clearGuidedLoopTimer();
+            bgMusic.pause();
+            skipMusic.currentTime = 0;
+            skipMusic.play().catch(() => {});
+            tutorialOverlay.classList.add("is-exiting");
+            tutorialOverlay.setAttribute("aria-hidden", "true");
+            window.setTimeout(() => {
+                tutorialOverlay.classList.remove(
+                    "is-active",
+                    "is-exiting",
+                    "phase-small",
+                    "phase-left",
+                    "phase-guided",
+                    "step-interval",
+                    "step-data",
+                    "step-actions"
+                );
+                tutorialDemoWrap.setAttribute("aria-hidden", "true");
+                guidedStepIndex = -1;
+                document.body.classList.remove("tutorial-open");
+            }, tutorialOutroDurationMs);
+        }
 
         function createRow() {
             const row = document.createElement("div");
@@ -321,20 +500,18 @@
             window.location.href = "Table.html";
         });
 
-        skipTutorialBtn.addEventListener("click", () => {
-            if (!tutorialOverlay.classList.contains("is-active")) return;
-            if (phaseSmallTimerId) window.clearTimeout(phaseSmallTimerId);
-            if (phaseLeftTimerId) window.clearTimeout(phaseLeftTimerId);
-            bgMusic.pause();
-            skipMusic.currentTime = 0;
-            skipMusic.play().catch(() => {});
-            tutorialOverlay.classList.add("is-exiting");
-            tutorialOverlay.setAttribute("aria-hidden", "true");
-            window.setTimeout(() => {
-                tutorialOverlay.classList.remove("is-active", "is-exiting", "phase-small", "phase-left");
-                document.body.classList.remove("tutorial-open");
-            }, tutorialOutroDurationMs);
+        tutorialOverlay.addEventListener("click", (event) => {
+            if (!tutorialOverlay.classList.contains("phase-guided")) return;
+            if (event.target.closest("#skipTutorialBtn")) return;
+            const isLastStep = guidedStepIndex >= guidedSteps.length - 1;
+            if (isLastStep) {
+                closeTutorial();
+                return;
+            }
+            setGuidedStep(guidedStepIndex + 1);
         });
+
+        skipTutorialBtn.addEventListener("click", closeTutorial);
     </script>
 
 </body>
