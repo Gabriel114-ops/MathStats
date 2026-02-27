@@ -82,6 +82,7 @@
         const clearBtn = document.getElementById("clearBtn");
         const calcBtn = document.getElementById("calcBtn");
         const intervalInput = document.getElementById("intervalInput");
+        const TABLE_DATA_KEY = "mathStatsTableData";
         const tutorialOverlay = document.getElementById("tutorialOverlay");
         const skipTutorialBtn = document.getElementById("skipTutorialBtn");
         const bgMusic = document.getElementById("bgMusic");
@@ -184,6 +185,43 @@
             clearRowsToSingleBlank();
         });
 
+        function parseIntervalBounds(intervalText) {
+            const match = intervalText.match(/(-?\d*\.?\d+)\s*-\s*(-?\d*\.?\d+)/);
+            if (!match) return null;
+            const lower = Number(match[1]);
+            const upper = Number(match[2]);
+            if (!Number.isFinite(lower) || !Number.isFinite(upper)) return null;
+            const min = Math.min(lower, upper);
+            const max = Math.max(lower, upper);
+            return {
+                lowerLimit: min,
+                upperLimit: max,
+                midpoint: (min + max) / 2,
+                lowerBoundary: min - 0.5,
+                upperBoundary: max + 0.5
+            };
+        }
+
+        function buildTally(frequency) {
+            if (frequency === 0) return "-";
+            const groupsOfFive = Math.floor(frequency / 5);
+            const remainder = frequency % 5;
+            const pieces = [];
+
+            for (let i = 0; i < groupsOfFive; i += 1) {
+                pieces.push("||||/");
+            }
+            if (remainder > 0) {
+                pieces.push("|".repeat(remainder));
+            }
+            return pieces.join(" ");
+        }
+
+        function formatNumber(value) {
+            if (Number.isInteger(value)) return String(value);
+            return Number(value.toFixed(4)).toString();
+        }
+
         calcBtn.addEventListener("click", () => {
             const rows = getRows();
             const parsed = [];
@@ -195,8 +233,8 @@
 
                 const x = Number(dataValue);
                 const f = Number(freqValue);
-                if (!Number.isFinite(x) || !Number.isFinite(f) || f < 0) {
-                    alert(`Invalid values on row ${i + 1}. Use numeric data and non-negative frequency.`);
+                if (!Number.isFinite(x) || !Number.isFinite(f) || f < 0 || !Number.isInteger(f)) {
+                    alert(`Invalid values on row ${i + 1}. Use numeric data and whole-number non-negative frequency.`);
                     return;
                 }
                 parsed.push({ x, f });
@@ -217,21 +255,70 @@
                 return;
             }
 
+            const parsedIntervals = intervals.map(parseIntervalBounds);
+            for (let i = 0; i < parsedIntervals.length; i += 1) {
+                if (parsedIntervals[i] !== null) continue;
+                alert(`Invalid interval format at item ${i + 1}. Use format like 10-19.`);
+                return;
+            }
+
             const totalFrequency = parsed.reduce((sum, row) => sum + row.f, 0);
             if (totalFrequency === 0) {
                 alert("Total frequency cannot be zero.");
                 return;
             }
 
-            const sumFX = parsed.reduce((sum, row) => sum + (row.x * row.f), 0);
+            const tableRows = [];
+            let cumulativeFrequency = 0;
+            for (let i = 0; i < parsed.length; i += 1) {
+                const row = parsed[i];
+                cumulativeFrequency += row.f;
+                const intervalText = intervals[i] || `${row.x}`;
+                const intervalBounds = intervals[i] ? parsedIntervals[i] : null;
+                const midpoint = intervalBounds ? intervalBounds.midpoint : row.x;
+                const lowerBoundary = intervalBounds ? intervalBounds.lowerBoundary : row.x - 0.5;
+                const upperBoundary = intervalBounds ? intervalBounds.upperBoundary : row.x + 0.5;
+                const fx = midpoint * row.f;
+
+                tableRows.push({
+                    classInterval: intervalText,
+                    tally: buildTally(row.f),
+                    frequency: row.f,
+                    midpoint,
+                    classBoundaries: `${formatNumber(lowerBoundary)} - ${formatNumber(upperBoundary)}`,
+                    fx,
+                    cumulativeFrequency
+                });
+            }
+
+            const sumFX = tableRows.reduce((sum, row) => sum + row.fx, 0);
             const mean = sumFX / totalFrequency;
 
-            alert(
-                `Entries: ${parsed.length}\n` +
-                `Total Frequency (Σf): ${totalFrequency}\n` +
-                `Sum of f*x (Σfx): ${sumFX}\n` +
-                `Mean: ${mean.toFixed(4)}`
-            );
+            const sumFExpression = parsed.map((row) => row.f).join(" + ");
+            const sumFXExpression = tableRows
+                .map((row) => `(${formatNumber(row.midpoint)} × ${row.frequency})`)
+                .join(" + ");
+
+            const processSteps = [
+                `Given ${parsed.length} data point(s) with frequency values.`,
+                "Formula used: Mean = Σfx / Σf",
+                `Compute Σf: ${sumFExpression} = ${formatNumber(totalFrequency)}`,
+                `Compute Σfx: ${sumFXExpression} = ${formatNumber(sumFX)}`,
+                `Final Mean: ${formatNumber(sumFX)} / ${formatNumber(totalFrequency)} = ${formatNumber(mean)}`
+            ];
+
+            const payload = {
+                rows: tableRows,
+                totals: {
+                    totalFrequency,
+                    sumFX,
+                    mean
+                },
+                processSteps
+            };
+
+            localStorage.setItem(TABLE_DATA_KEY, JSON.stringify(payload));
+            window.location.href = "Table.html";
         });
 
         skipTutorialBtn.addEventListener("click", () => {

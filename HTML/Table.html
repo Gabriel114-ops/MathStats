@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Complete Statistical Table</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/MathStats/CSS/Table.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Complete Statistical Table</h1>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Class<br>Interval</th>
+                    <th>Tally</th>
+                    <th>Frequency (f<sub>i</sub>)</th>
+                    <th>Midpoint (x)</th>
+                    <th>Class Boundaries</th>
+                    <th>fx</th>
+                    <th>Cumulative<br>Frequency</th>
+                </tr>
+            </thead>
+
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <section class="process-card">
+        <h2>Solution Process</h2>
+        <ol id="processList"></ol>
+        <div class="summary" id="summaryBox"></div>
+        <a class="back-link" href="DataInput.html">Back to Data Input</a>
+    </section>
+
+</div>
+
+<script>
+    const TABLE_DATA_KEY = "mathStatsTableData";
+    const tableBody = document.getElementById("tableBody");
+    const processList = document.getElementById("processList");
+    const summaryBox = document.getElementById("summaryBox");
+
+    function formatNumber(value) {
+        if (!Number.isFinite(value)) return "-";
+        if (Number.isInteger(value)) return String(value);
+        return Number(value.toFixed(4)).toString();
+    }
+
+    function escapeHtml(text) {
+        return String(text)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#39;");
+    }
+
+    function renderEmptyState() {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" class="empty-state">
+                    No computed data found. Please calculate first from the Data Input page.
+                </td>
+            </tr>
+        `;
+        processList.innerHTML = "<li>No process to show yet.</li>";
+        summaryBox.innerHTML = "<strong>Summary:</strong> Waiting for input data.";
+    }
+
+    function renderTable(payload) {
+        const { rows, totals, processSteps } = payload;
+        if (!Array.isArray(rows) || rows.length === 0 || !totals) {
+            renderEmptyState();
+            return;
+        }
+
+        let bodyMarkup = "";
+        for (const row of rows) {
+            bodyMarkup += `
+                <tr>
+                    <td>${escapeHtml(row.classInterval)}</td>
+                    <td>${escapeHtml(row.tally)}</td>
+                    <td>${formatNumber(row.frequency)}</td>
+                    <td>${formatNumber(row.midpoint)}</td>
+                    <td>${escapeHtml(row.classBoundaries)}</td>
+                    <td>${formatNumber(row.fx)}</td>
+                    <td>${formatNumber(row.cumulativeFrequency)}</td>
+                </tr>
+            `;
+        }
+
+        bodyMarkup += `
+            <tr class="total-row">
+                <td>Total</td>
+                <td>-</td>
+                <td>${formatNumber(totals.totalFrequency)}</td>
+                <td>-</td>
+                <td>-</td>
+                <td>${formatNumber(totals.sumFX)}</td>
+                <td>${formatNumber(totals.totalFrequency)}</td>
+            </tr>
+        `;
+        tableBody.innerHTML = bodyMarkup;
+
+        if (Array.isArray(processSteps) && processSteps.length > 0) {
+            processList.innerHTML = processSteps.map((step) => `<li>${escapeHtml(step)}</li>`).join("");
+        } else {
+            processList.innerHTML = "<li>No process steps recorded.</li>";
+        }
+
+        summaryBox.innerHTML =
+            `<strong>Summary:</strong> Σf = ${formatNumber(totals.totalFrequency)}, ` +
+            `Σfx = ${formatNumber(totals.sumFX)}, Mean = ${formatNumber(totals.mean)}`;
+    }
+
+    const raw = localStorage.getItem(TABLE_DATA_KEY);
+    if (!raw) {
+        renderEmptyState();
+    } else {
+        try {
+            renderTable(JSON.parse(raw));
+        } catch (error) {
+            renderEmptyState();
+        }
+    }
+</script>
+
+</body>
+</html>

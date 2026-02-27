@@ -1,0 +1,139 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #e6d9ea;
+    font-family: 'Cinzel', serif;
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+}
+
+.container {
+    width: 95%;
+    max-width: 1400px;
+    background: #f3edf6;
+    padding: 25px;
+    border-radius: 15px;
+
+    border: 2px solid #d84ab7;
+    box-shadow: 0 0 0 3px #f3edf6 inset,
+                0 0 0 5px #d84ab7 inset;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+h1 {
+    color: #4b1c72;
+    font-size: 38px;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    background: #e8e1eb;
+}
+
+thead th {
+    background: #f0e8f4;
+    color: #5c2a7d;
+    font-size: 22px;
+    padding: 15px;
+    border: 2px solid #d84ab7;
+    text-align: center;
+}
+
+tbody td {
+    min-height: 70px;
+    border: 2px solid #d84ab7;
+    text-align: center;
+    font-size: 20px;
+    color: #4b1c72;
+    padding: 10px;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.total-row td {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.empty-state {
+    text-align: center;
+    font-size: 20px;
+    padding: 24px;
+}
+
+.process-card {
+    margin-top: 24px;
+    padding: 20px;
+    border: 2px solid #d84ab7;
+    border-radius: 12px;
+    background: #eee4f3;
+    color: #4b1c72;
+}
+
+.process-card h2 {
+    font-size: 30px;
+    margin-bottom: 12px;
+}
+
+#processList {
+    margin-left: 28px;
+    font-size: 19px;
+    line-height: 1.5;
+}
+
+#processList li {
+    margin-bottom: 8px;
+}
+
+.summary {
+    margin-top: 12px;
+    font-size: 20px;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 14px;
+    color: #5c2a7d;
+    font-size: 18px;
+    text-decoration: none;
+    border-bottom: 2px solid #5c2a7d;
+}
+
+@media (max-width: 1024px) {
+    body {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 30px;
+    }
+
+    thead th,
+    tbody td {
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    .process-card h2 {
+        font-size: 24px;
+    }
+
+    #processList,
+    .summary {
+        font-size: 17px;
+    }
+}
