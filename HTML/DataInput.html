@@ -122,7 +122,6 @@
         const intervalInput = document.getElementById("intervalInput");
         const TABLE_DATA_KEY = "mathStatsTableData";
         const INPUT_DRAFT_KEY = "mathStatsInputDraft";
-        const TUTORIAL_SEEN_KEY = "mathStatsHasSeenTutorial";
         const SKIP_TUTORIAL_ON_RETURN_KEY = "mathStatsSkipTutorialOnReturn";
         const tutorialOverlay = document.getElementById("tutorialOverlay");
         const skipTutorialBtn = document.getElementById("skipTutorialBtn");
@@ -301,7 +300,6 @@
                 tutorialDemoWrap.setAttribute("aria-hidden", "true");
                 guidedStepIndex = -1;
                 document.body.classList.remove("tutorial-open");
-                localStorage.setItem(TUTORIAL_SEEN_KEY, "true");
             }, tutorialOutroDurationMs);
         }
 
@@ -364,11 +362,10 @@
 
         function startTutorialIfNeeded() {
             const shouldSkipForReturn = sessionStorage.getItem(SKIP_TUTORIAL_ON_RETURN_KEY) === "1";
-            const hasSeenTutorial = localStorage.getItem(TUTORIAL_SEEN_KEY) === "true";
             if (shouldSkipForReturn) {
                 sessionStorage.removeItem(SKIP_TUTORIAL_ON_RETURN_KEY);
             }
-            if (shouldSkipForReturn || hasSeenTutorial) return;
+            if (shouldSkipForReturn) return;
 
             document.body.classList.add("tutorial-open");
             window.setTimeout(() => {
