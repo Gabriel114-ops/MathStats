@@ -121,6 +121,9 @@
         const calcBtn = document.getElementById("calcBtn");
         const intervalInput = document.getElementById("intervalInput");
         const TABLE_DATA_KEY = "mathStatsTableData";
+        const INPUT_DRAFT_KEY = "mathStatsInputDraft";
+        const TUTORIAL_SEEN_KEY = "mathStatsHasSeenTutorial";
+        const SKIP_TUTORIAL_ON_RETURN_KEY = "mathStatsSkipTutorialOnReturn";
         const tutorialOverlay = document.getElementById("tutorialOverlay");
         const skipTutorialBtn = document.getElementById("skipTutorialBtn");
         const kuromiGuidedDialogue = document.getElementById("kuromiGuidedDialogue");
@@ -190,26 +193,6 @@
         }
 
         tryStartBackgroundMusic();
-
-        document.body.classList.add("tutorial-open");
-        window.setTimeout(() => {
-            tutorialOverlay.classList.add("is-active");
-            tutorialOverlay.setAttribute("aria-hidden", "false");
-            phaseSmallTimerId = window.setTimeout(() => {
-                if (!tutorialOverlay.classList.contains("is-active")) return;
-                tutorialOverlay.classList.add("phase-small");
-            }, hudIntroDurationMs);
-            phaseLeftTimerId = window.setTimeout(() => {
-                if (!tutorialOverlay.classList.contains("is-active")) return;
-                tutorialOverlay.classList.add("phase-left");
-            }, hudIntroDurationMs + hudShrinkDurationMs);
-            guidedPhaseTimerId = window.setTimeout(() => {
-                if (!tutorialOverlay.classList.contains("is-active")) return;
-                tutorialOverlay.classList.add("phase-guided");
-                tutorialDemoWrap.setAttribute("aria-hidden", "false");
-                setGuidedStep(0);
-            }, hudIntroDurationMs + hudShrinkDurationMs + guidedTutorialDelayMs);
-        }, tutorialStartDelayMs);
 
         function clearGuidedLoopTimer() {
             if (!guidedLoopTimerId) return;
@@ -318,6 +301,7 @@
                 tutorialDemoWrap.setAttribute("aria-hidden", "true");
                 guidedStepIndex = -1;
                 document.body.classList.remove("tutorial-open");
+                localStorage.setItem(TUTORIAL_SEEN_KEY, "true");
             }, tutorialOutroDurationMs);
         }
 
@@ -341,10 +325,81 @@
             entriesContainer.appendChild(createRow());
         }
 
+        function getDraftPayload() {
+            return {
+                interval: intervalInput.value,
+                entries: getRows().map((row) => ({
+                    data: row.querySelector(".data-input").value,
+                    frequency: row.querySelector(".freq-input").value
+                }))
+            };
+        }
+
+        function saveDraft() {
+            localStorage.setItem(INPUT_DRAFT_KEY, JSON.stringify(getDraftPayload()));
+        }
+
+        function restoreDraft() {
+            const raw = localStorage.getItem(INPUT_DRAFT_KEY);
+            if (!raw) return;
+            try {
+                const draft = JSON.parse(raw);
+                intervalInput.value = typeof draft.interval === "string" ? draft.interval : "";
+
+                const draftEntries = Array.isArray(draft.entries) ? draft.entries : [];
+                const usableEntries = draftEntries.length > 0 ? draftEntries : [{ data: "", frequency: "" }];
+
+                entriesContainer.innerHTML = "";
+                for (const entry of usableEntries) {
+                    const row = createRow();
+                    row.querySelector(".data-input").value = typeof entry.data === "string" ? entry.data : "";
+                    row.querySelector(".freq-input").value = typeof entry.frequency === "string" ? entry.frequency : "";
+                    entriesContainer.appendChild(row);
+                }
+            } catch (error) {
+                clearRowsToSingleBlank();
+                intervalInput.value = "";
+            }
+        }
+
+        function startTutorialIfNeeded() {
+            const shouldSkipForReturn = sessionStorage.getItem(SKIP_TUTORIAL_ON_RETURN_KEY) === "1";
+            const hasSeenTutorial = localStorage.getItem(TUTORIAL_SEEN_KEY) === "true";
+            if (shouldSkipForReturn) {
+                sessionStorage.removeItem(SKIP_TUTORIAL_ON_RETURN_KEY);
+            }
+            if (shouldSkipForReturn || hasSeenTutorial) return;
+
+            document.body.classList.add("tutorial-open");
+            window.setTimeout(() => {
+                tutorialOverlay.classList.add("is-active");
+                tutorialOverlay.setAttribute("aria-hidden", "false");
+                phaseSmallTimerId = window.setTimeout(() => {
+                    if (!tutorialOverlay.classList.contains("is-active")) return;
+                    tutorialOverlay.classList.add("phase-small");
+                }, hudIntroDurationMs);
+                phaseLeftTimerId = window.setTimeout(() => {
+                    if (!tutorialOverlay.classList.contains("is-active")) return;
+                    tutorialOverlay.classList.add("phase-left");
+                }, hudIntroDurationMs + hudShrinkDurationMs);
+                guidedPhaseTimerId = window.setTimeout(() => {
+                    if (!tutorialOverlay.classList.contains("is-active")) return;
+                    tutorialOverlay.classList.add("phase-guided");
+                    tutorialDemoWrap.setAttribute("aria-hidden", "false");
+                    setGuidedStep(0);
+                }, hudIntroDurationMs + hudShrinkDurationMs + guidedTutorialDelayMs);
+            }, tutorialStartDelayMs);
+        }
+
+        restoreDraft();
+        saveDraft();
+        startTutorialIfNeeded();
+
         addBtn.addEventListener("click", () => {
             const newRow = createRow();
             entriesContainer.appendChild(newRow);
             newRow.scrollIntoView({ behavior: "smooth", block: "start" });
+            saveDraft();
         });
 
         entriesContainer.addEventListener("click", (event) => {
@@ -354,14 +409,24 @@
             if (rows.length === 1) {
                 rows[0].querySelector(".data-input").value = "";
                 rows[0].querySelector(".freq-input").value = "";
+                saveDraft();
                 return;
             }
             target.closest(".row").remove();
+            saveDraft();
         });
 
         clearBtn.addEventListener("click", () => {
             intervalInput.value = "";
             clearRowsToSingleBlank();
+            saveDraft();
+        });
+
+        intervalInput.addEventListener("input", saveDraft);
+        entriesContainer.addEventListener("input", (event) => {
+            if (event.target.matches(".data-input, .freq-input")) {
+                saveDraft();
+            }
         });
 
         function parseIntervalBounds(intervalText) {
@@ -497,6 +562,7 @@
             };
 
             localStorage.setItem(TABLE_DATA_KEY, JSON.stringify(payload));
+            saveDraft();
             window.location.href = "Table.html";
         });
 

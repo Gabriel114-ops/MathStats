@@ -39,7 +39,7 @@
         <h2>Solution Process</h2>
         <ol id="processList"></ol>
         <div class="summary" id="summaryBox"></div>
-        <a class="back-link" href="DataInput.html">Back to Data Input</a>
+        <a class="back-link" id="backToInputLink" href="DataInput.html">Back to Data Input</a>
     </section>
 
 </div>
@@ -49,6 +49,8 @@
     const tableBody = document.getElementById("tableBody");
     const processList = document.getElementById("processList");
     const summaryBox = document.getElementById("summaryBox");
+    const backToInputLink = document.getElementById("backToInputLink");
+    const SKIP_TUTORIAL_ON_RETURN_KEY = "mathStatsSkipTutorialOnReturn";
 
     function formatNumber(value) {
         if (!Number.isFinite(value)) return "-";
@@ -133,6 +135,10 @@
             renderEmptyState();
         }
     }
+
+    backToInputLink.addEventListener("click", () => {
+        sessionStorage.setItem(SKIP_TUTORIAL_ON_RETURN_KEY, "1");
+    });
 </script>
 
 </body>
