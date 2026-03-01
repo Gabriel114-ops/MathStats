@@ -13,12 +13,17 @@
 <body>
     <div class="page-content">
     <div class="title">MATH STATS</div>
-
     
     <div class="card">
 
         <img src="../IMAGES/skull.png" class="skull left" alt="skull">
         <img src="../IMAGES/skull2.png" class="skull right" alt="skull">
+        <img src="../IMAGES/AmazedK.png" class="skull deco deco-1" alt="decorative image">
+        <img src="../IMAGES/PowerK.png" class="skull deco deco-2" alt="decorative image">
+        <img src="../IMAGES/mean.png" class="skull deco deco-3" alt="decorative image">
+        <img src="../IMAGES/BlinkingK.gif" class="skull deco deco-4" alt="decorative image">
+        <img src="../IMAGES/LaughingK.gif" class="skull deco deco-5" alt="decorative image">
+        <img src="../IMAGES/PeekingK.gif" class="skull deco deco-6" alt="decorative image">
 
         <div class="section-title">📊 Data Input</div>
 
@@ -26,6 +31,13 @@
         <input id="intervalInput" type="text" placeholder="Enter intervals separated by commas">
         <div class="note">
             Leave empty for ungrouped data, or enter intervals separated by commas
+        </div>
+        <div class="interpolation-row">
+            <span class="interpolation-text">Interpolation Method</span>
+            <label class="interpolation-switch" for="interpolationToggle">
+                <input id="interpolationToggle" type="checkbox" aria-label="Toggle interpolation method">
+                <span class="interpolation-slider" aria-hidden="true"></span>
+            </label>
         </div>
 
         <label>Data & Frequency</label>
@@ -132,6 +144,7 @@
         const freqTypingText = document.getElementById("freqTypingText");
         const tutorialDataRow = document.getElementById("tutorialDataRow");
         const bgMusic = document.getElementById("bgMusic");
+        const interpolationToggle = document.getElementById("interpolationToggle");
 
         const targetMusicVolume = 0.1 ;
         const skipMusic = new Audio("../KBG.mp3");
@@ -326,6 +339,7 @@
         function getDraftPayload() {
             return {
                 interval: intervalInput.value,
+                useInterpolation: interpolationToggle.checked,
                 entries: getRows().map((row) => ({
                     data: row.querySelector(".data-input").value,
                     frequency: row.querySelector(".freq-input").value
@@ -343,6 +357,7 @@
             try {
                 const draft = JSON.parse(raw);
                 intervalInput.value = typeof draft.interval === "string" ? draft.interval : "";
+                interpolationToggle.checked = Boolean(draft.useInterpolation);
 
                 const draftEntries = Array.isArray(draft.entries) ? draft.entries : [];
                 const usableEntries = draftEntries.length > 0 ? draftEntries : [{ data: "", frequency: "" }];
@@ -357,6 +372,7 @@
             } catch (error) {
                 clearRowsToSingleBlank();
                 intervalInput.value = "";
+                interpolationToggle.checked = false;
             }
         }
 
@@ -420,6 +436,7 @@
         });
 
         intervalInput.addEventListener("input", saveDraft);
+        interpolationToggle.addEventListener("change", saveDraft);
         entriesContainer.addEventListener("input", (event) => {
             if (event.target.matches(".data-input, .freq-input")) {
                 saveDraft();
@@ -511,6 +528,7 @@
                 alert(`Invalid interval format at item ${i + 1}. Use format like 10-19.`);
                 return;
             }
+            const useInterpolation = interpolationToggle.checked && intervals.length > 0;
 
             const totalFrequency = parsed.reduce((sum, row) => sum + row.f, 0);
             if (totalFrequency === 0) {
@@ -556,12 +574,61 @@
             const rightPosition = isEven ? leftPosition + 1 : leftPosition;
             const leftMedianValue = findValueAtPosition(sortedPairs, leftPosition);
             const rightMedianValue = findValueAtPosition(sortedPairs, rightPosition);
-            const median = (leftMedianValue + rightMedianValue) / 2;
 
-            const maxFrequency = Math.max(...sortedPairs.map((pair) => pair.frequency));
-            const modeValues = sortedPairs
+            let median = (leftMedianValue + rightMedianValue) / 2;
+            let medianClassIndex = -1;
+            let medianLowerBoundary = null;
+            let medianClassFrequency = null;
+            let medianCFPrev = null;
+            let medianClassWidth = null;
+
+            const maxFrequency = Math.max(...parsed.map((row) => row.f));
+            let modeValues = sortedPairs
                 .filter((pair) => pair.frequency === maxFrequency)
                 .map((pair) => pair.value);
+            let modalClassIndexes = [];
+            let interpolatedModeDetails = [];
+
+            if (useInterpolation) {
+                const targetPosition = totalFrequency / 2;
+                let runningFrequency = 0;
+                for (let i = 0; i < parsed.length; i += 1) {
+                    const previousFrequency = runningFrequency;
+                    runningFrequency += parsed[i].f;
+                    if (runningFrequency < targetPosition) continue;
+                    medianClassIndex = i;
+                    medianCFPrev = previousFrequency;
+                    medianClassFrequency = parsed[i].f;
+                    medianLowerBoundary = parsedIntervals[i].lowerBoundary;
+                    medianClassWidth = parsedIntervals[i].upperBoundary - parsedIntervals[i].lowerBoundary;
+                    if (medianClassFrequency > 0) {
+                        median =
+                            medianLowerBoundary +
+                            ((targetPosition - medianCFPrev) / medianClassFrequency) * medianClassWidth;
+                    }
+                    break;
+                }
+
+                modalClassIndexes = parsed
+                    .map((row, index) => ({ frequency: row.f, index }))
+                    .filter((row) => row.frequency === maxFrequency)
+                    .map((row) => row.index);
+
+                modeValues = modalClassIndexes.map((index) => {
+                    const f1 = parsed[index].f;
+                    const f0 = index > 0 ? parsed[index - 1].f : 0;
+                    const f2 = index < parsed.length - 1 ? parsed[index + 1].f : 0;
+                    const L = parsedIntervals[index].lowerBoundary;
+                    const h = parsedIntervals[index].upperBoundary - parsedIntervals[index].lowerBoundary;
+                    const denominator = 2 * f1 - f0 - f2;
+                    const value =
+                        denominator === 0
+                            ? tableRows[index].midpoint
+                            : L + ((f1 - f0) / denominator) * h;
+                    interpolatedModeDetails.push({ f0, f1, f2, L, h, denominator, value });
+                    return value;
+                });
+            }
 
             const squaredDeviationTerms = tableRows.map((row) => {
                 const diff = row.midpoint - mean;
@@ -601,17 +668,33 @@
             ];
             const medianSteps = [
                 commonIntroStep,
-                "Median formula (frequency data): locate the middle position(s) in cumulative frequency.",
-                `Total frequency N = ${formatNumber(totalFrequency)}; positions used: ${formatNumber(leftPosition)}${isEven ? ` and ${formatNumber(rightPosition)}` : ""}.`,
-                isEven
-                    ? `Median = (${formatNumber(leftMedianValue)} + ${formatNumber(rightMedianValue)}) / 2 = ${formatNumber(median)}`
-                    : `Median = value at position ${formatNumber(leftPosition)} = ${formatNumber(median)}`
+                useInterpolation
+                    ? "Median formula (interpolated grouped data): Median = L + ((N/2 - c.f.prev) / f) x h"
+                    : "Median formula (frequency data): locate the middle position(s) in cumulative frequency.",
+                useInterpolation
+                    ? `N = ${formatNumber(totalFrequency)}, L = ${formatNumber(medianLowerBoundary)}, c.f.prev = ${formatNumber(medianCFPrev)}, f = ${formatNumber(medianClassFrequency)}, h = ${formatNumber(medianClassWidth)}.`
+                    : `Total frequency N = ${formatNumber(totalFrequency)}; positions used: ${formatNumber(leftPosition)}${isEven ? ` and ${formatNumber(rightPosition)}` : ""}.`,
+                useInterpolation
+                    ? `Median = ${formatNumber(median)}`
+                    : isEven
+                        ? `Median = (${formatNumber(leftMedianValue)} + ${formatNumber(rightMedianValue)}) / 2 = ${formatNumber(median)}`
+                        : `Median = value at position ${formatNumber(leftPosition)} = ${formatNumber(median)}`
             ];
             const modeSteps = [
                 commonIntroStep,
-                "Mode formula: value(s) with highest frequency.",
-                `Highest frequency = ${formatNumber(maxFrequency)}; Mode value(s) = ${modeExpression}.`
+                useInterpolation
+                    ? "Mode formula (interpolated grouped data): Mode = L + ((f1 - f0) / (2f1 - f0 - f2)) x h"
+                    : "Mode formula: value(s) with highest frequency.",
+                useInterpolation
+                    ? interpolatedModeDetails.length === 1
+                        ? `f0 = ${formatNumber(interpolatedModeDetails[0].f0)}, f1 = ${formatNumber(interpolatedModeDetails[0].f1)}, f2 = ${formatNumber(interpolatedModeDetails[0].f2)}, L = ${formatNumber(interpolatedModeDetails[0].L)}, h = ${formatNumber(interpolatedModeDetails[0].h)}.`
+                        : `Highest frequency class count = ${interpolatedModeDetails.length}. Interpolated each modal class using f0, f1, f2, L, and h.`
+                    : `Highest frequency = ${formatNumber(maxFrequency)}; Mode value(s) = ${modeExpression}.`,
+                useInterpolation
+                    ? `Interpolated Mode value(s) = ${modeExpression}.`
+                    : undefined
             ];
+            const cleanedModeSteps = modeSteps.filter(Boolean);
             const dispersionSteps = [
                 commonIntroStep,
                 "Standard deviation formula: σ = √( Σf(x - x̄)² / Σf )",
@@ -623,7 +706,7 @@
             const processSteps = [
                 ...meanSteps,
                 ...medianSteps.slice(1),
-                ...modeSteps.slice(1),
+                ...cleanedModeSteps.slice(1),
                 ...dispersionSteps.slice(1)
             ];
 
@@ -643,7 +726,7 @@
                 processByMetric: {
                     mean: meanSteps,
                     median: medianSteps,
-                    mode: modeSteps,
+                    mode: cleanedModeSteps,
                     dispersion: dispersionSteps
                 }
             };

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Math Stats - Solution Process</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/Table.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>All Solution Process</h1>
+    <section class="process-card">
+        <ol id="processList"></ol>
+        <div class="summary" id="summaryBox"></div>
+        <div class="process-actions">
+            <a class="process-link" href="Table.html">Back to Table</a>
+            <a class="back-link" id="backToInputLink" href="DataInput.html">Back to Data Input</a>
+        </div>
+    </section>
+</div>
+
+<script>
+    const TABLE_DATA_KEY = "mathStatsTableData";
+    const SKIP_TUTORIAL_ON_RETURN_KEY = "mathStatsSkipTutorialOnReturn";
+    const processList = document.getElementById("processList");
+    const summaryBox = document.getElementById("summaryBox");
+    const backToInputLink = document.getElementById("backToInputLink");
+
+    function formatNumber(value) {
+        if (!Number.isFinite(value)) return "-";
+        if (Number.isInteger(value)) return String(value);
+        return Number(value.toFixed(4)).toString();
+    }
+
+    function escapeHtml(text) {
+        return String(text)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#39;");
+    }
+
+    function emphasizeProcessLabels(stepText) {
+        const escaped = escapeHtml(stepText);
+        return escaped
+            .replaceAll("Mean:", "<strong>Mean:</strong>")
+            .replaceAll("Median:", "<strong>Median:</strong>")
+            .replaceAll("Mode:", "<strong>Mode:</strong>")
+            .replaceAll("Variance:", "<strong>Variance:</strong>")
+            .replaceAll("Standard Deviation:", "<strong>Standard Deviation:</strong>");
+    }
+
+    function renderEmptyState() {
+        processList.innerHTML = "<li>No process data yet. Calculate first from the Data Input page.</li>";
+        summaryBox.innerHTML = `
+            <div class="summary-title">Summary</div>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-label">Status</div>
+                    <div class="summary-value">Waiting for input data</div>
+                </div>
+            </div>
+        `;
+    }
+
+    const raw = localStorage.getItem(TABLE_DATA_KEY);
+    if (!raw) {
+        renderEmptyState();
+    } else {
+        try {
+            const payload = JSON.parse(raw);
+            const steps = Array.isArray(payload?.processSteps) ? payload.processSteps : [];
+            const totals = payload?.totals;
+            if (steps.length === 0) {
+                renderEmptyState();
+            } else {
+                processList.innerHTML = steps
+                    .map((step) => `<li>${emphasizeProcessLabels(step)}</li>`)
+                    .join("");
+
+                const modeText = Array.isArray(totals?.modeValues) && totals.modeValues.length > 0
+                    ? totals.modeValues.map((value) => formatNumber(value)).join(", ")
+                    : "-";
+
+                const summaryItems = [
+                    ["Σf", formatNumber(totals?.totalFrequency)],
+                    ["Σfx", formatNumber(totals?.sumFX)],
+                    ["Mean", formatNumber(totals?.mean)],
+                    ["Median", formatNumber(totals?.median)],
+                    ["Mode", modeText],
+                    ["Standard Deviation", formatNumber(totals?.standardDeviation)]
+                ];
+
+                summaryBox.innerHTML = `
+                    <div class="summary-title">Summary</div>
+                    <div class="summary-grid">
+                        ${summaryItems
+                            .map(([label, value]) => `
+                                <div class="summary-item">
+                                    <div class="summary-label">${label}</div>
+                                    <div class="summary-value">${escapeHtml(value)}</div>
+                                </div>
+                            `)
+                            .join("")}
+                    </div>
+                `;
+            }
+        } catch (error) {
+            renderEmptyState();
+        }
+    }
+
+    backToInputLink.addEventListener("click", () => {
+        sessionStorage.setItem(SKIP_TUTORIAL_ON_RETURN_KEY, "1");
+    });
+</script>
+
+</body>
+</html>

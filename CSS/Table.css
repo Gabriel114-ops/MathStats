@@ -15,7 +15,7 @@ body {
 .container {
     width: 95%;
     max-width: 1400px;
-    background: #f3edf6;
+    background: linear-gradient(135deg, #d6a0c6, #caa3d9);
     padding: 25px;
     border-radius: 15px;
 
@@ -101,16 +101,91 @@ tbody td {
 
 .summary {
     margin-top: 12px;
-    font-size: 20px;
 }
 
-.back-link {
-    display: inline-block;
-    margin-top: 14px;
+.summary-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.summary-item {
+    background: #f5ecf9;
+    border: 2px solid #d84ab7;
+    border-radius: 10px;
+    padding: 10px 12px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.summary-item:hover {
+    box-shadow: 0 0 12px rgba(216, 74, 183, 0.45);
+    transform: translateY(-1px);
+}
+
+.summary-label {
+    font-size: 14px;
     color: #5c2a7d;
-    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.summary-value {
+    font-size: 20px;
+    color: #4b1c72;
+    font-weight: 700;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.back-link,
+.process-link {
+    display: inline-block;
+    padding: 12px 24px;
+    color: #c44eb7;
+    font-size: 24px;
+    font-weight: 600;
     text-decoration: none;
-    border-bottom: 2px solid #5c2a7d;
+    border: 2px solid #b14fd4;
+    border-radius: 12px;
+    background: #e0e0e0;
+    line-height: 1.1;
+    transition: filter 0.18s ease, box-shadow 0.18s ease;
+}
+
+.process-actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.back-link:hover,
+.process-link:hover {
+    filter: brightness(1.04);
+    box-shadow: 0 8px 20px rgba(177, 79, 212, 0.22);
+}
+
+.process-actions .back-link {
+    margin-top: 0;
+}
+
+.table-nav-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 14px;
+}
+
+.table-nav-actions .back-link {
+    margin-top: 0;
 }
 
 @media (max-width: 1024px) {
@@ -132,8 +207,21 @@ tbody td {
         font-size: 24px;
     }
 
-    #processList,
-    .summary {
+    #processList {
         font-size: 17px;
+    }
+
+    .summary-value {
+        font-size: 17px;
+    }
+
+    .table-nav-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .table-nav-actions .back-link,
+    .table-nav-actions .process-link {
+        text-align: center;
     }
 }

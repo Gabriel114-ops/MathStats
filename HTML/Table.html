@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Complete Statistical Table</title>
+    <title>Math Stats</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&display=swap" rel="stylesheet">
@@ -35,20 +35,16 @@
         </table>
     </div>
 
-    <section class="process-card">
-        <h2>Solution Process</h2>
-        <ol id="processList"></ol>
-        <div class="summary" id="summaryBox"></div>
+    <div class="table-nav-actions">
         <a class="back-link" id="backToInputLink" href="DataInput.html">Back to Data Input</a>
-    </section>
+        <a class="process-link" href="SolutionProcess.html">Open Full Solution Page</a>
+    </div>
 
 </div>
 
 <script>
     const TABLE_DATA_KEY = "mathStatsTableData";
     const tableBody = document.getElementById("tableBody");
-    const processList = document.getElementById("processList");
-    const summaryBox = document.getElementById("summaryBox");
     const backToInputLink = document.getElementById("backToInputLink");
     const SKIP_TUTORIAL_ON_RETURN_KEY = "mathStatsSkipTutorialOnReturn";
 
@@ -75,12 +71,10 @@
                 </td>
             </tr>
         `;
-        processList.innerHTML = "<li>No process to show yet.</li>";
-        summaryBox.innerHTML = "<strong>Summary:</strong> Waiting for input data.";
     }
 
     function renderTable(payload) {
-        const { rows, totals, processSteps } = payload;
+        const { rows, totals } = payload;
         if (!Array.isArray(rows) || rows.length === 0 || !totals) {
             renderEmptyState();
             return;
@@ -113,22 +107,6 @@
             </tr>
         `;
         tableBody.innerHTML = bodyMarkup;
-
-        if (Array.isArray(processSteps) && processSteps.length > 0) {
-            processList.innerHTML = processSteps.map((step) => `<li>${escapeHtml(step)}</li>`).join("");
-        } else {
-            processList.innerHTML = "<li>No process steps recorded.</li>";
-        }
-
-        const modeText = Array.isArray(totals.modeValues) && totals.modeValues.length > 0
-            ? totals.modeValues.map((value) => formatNumber(value)).join(", ")
-            : "-";
-
-        summaryBox.innerHTML =
-            `<strong>Summary:</strong> Σf = ${formatNumber(totals.totalFrequency)}, ` +
-            `Σfx = ${formatNumber(totals.sumFX)}, Mean = ${formatNumber(totals.mean)}, ` +
-            `Median = ${formatNumber(totals.median)}, Mode = ${modeText}, ` +
-            `Standard Deviation = ${formatNumber(totals.standardDeviation)}`;
     }
 
     const raw = localStorage.getItem(TABLE_DATA_KEY);

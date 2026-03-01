@@ -671,21 +671,67 @@ body.tutorial-open .page-content {
     width: 50px;
     height: auto;
     filter: blur(3px);
+    pointer-events: none;
+    z-index: 0;
 }
 
 .skull.left {
-    left: -15%;
-    top: 8%;
+    position: fixed;
+    left: -28px;
+    top: 10%;
     animation: zoom 3s ease-in-out infinite;
 }
 
 .skull.right {
-    right: -15%;
+    position: fixed;
+    right: -28px;
     top: 78%;
     animation: zoom 4.5s ease-in-out infinite;
 }
 
+.deco {
+    position: fixed;
+}
+
+.deco-1 {
+    top: 8%;
+    left: -30px;
+    animation: zoom 3.6s ease-in-out infinite;
+}
+
+.deco-2 {
+    top: 18%;
+    right: -30px;
+    animation: zoom 4.2s ease-in-out infinite;
+}
+
+.deco-3 {
+    top: 35%;
+    left: -32px;
+    animation: zoom 4.8s ease-in-out infinite;
+}
+
+.deco-4 {
+    top: 48%;
+    right: -32px;
+    animation: zoom 3.9s ease-in-out infinite;
+}
+
+.deco-5 {
+    top: 73%;
+    left: -30px;
+    animation: zoom 4.4s ease-in-out infinite;
+}
+
+.deco-6 {
+    top: 82%;
+    right: -30px;
+    animation: zoom 5s ease-in-out infinite;
+}
+
 .card {
+    position: relative;
+    z-index: 1;
     transform: translateX(32%);
     margin-top: 50px;
     top: 20% ;
@@ -822,6 +868,66 @@ input:focus {
     font-size: 15px;
     margin-top: 5px;
     color: #ff3cac;
+}
+
+.interpolation-row {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.interpolation-text {
+    color: #7b2e83;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.interpolation-switch {
+    position: relative;
+    width: 58px;
+    height: 30px;
+    display: inline-block;
+}
+
+.interpolation-switch input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.interpolation-slider {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: #d2bddb;
+    border: 2px solid #b14fd4;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.interpolation-slider::before {
+    content: "";
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    left: 2px;
+    top: 2px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 7px rgba(96, 80, 157, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.interpolation-switch input:checked + .interpolation-slider {
+    background: #c44eb7;
+    border-color: #9e2f92;
+}
+
+.interpolation-switch input:checked + .interpolation-slider::before {
+    transform: translateX(28px);
 }
 
 @keyframes h1GradientShift {

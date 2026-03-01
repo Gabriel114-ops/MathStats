@@ -27,6 +27,12 @@ body {
     min-height: 280px;
     height: 340px;
     perspective: 1300px;
+    border-radius: 12px;
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: 0 0 0 2px rgba(216, 74, 183, 0.35), 0 0 18px rgba(216, 74, 183, 0.55);
 }
 
 .card-inner {
@@ -53,6 +59,7 @@ body {
     gap: 14px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     backface-visibility: hidden;
+    transition: box-shadow 0.2s ease;
 }
 
 .card-front {
@@ -155,13 +162,20 @@ body {
 
 .actions a {
     text-decoration: none;
-    color: #5f2555;
+    color: #c44eb7;
     font-weight: 600;
-    border: 2px solid #8b3e78;
-    padding: 12px 20px;
-    border-radius: 10px;
-    background: #edd7e7;
-    font-size: 20px;
+    border: 2px solid #b14fd4;
+    padding: 12px 24px;
+    border-radius: 12px;
+    background: #e0e0e0;
+    font-size: 24px;
+    line-height: 1.1;
+    transition: filter 0.18s ease, box-shadow 0.18s ease;
+}
+
+.actions a:hover {
+    filter: brightness(1.04);
+    box-shadow: 0 8px 20px rgba(177, 79, 212, 0.22);
 }
 
 @media (max-width: 768px) {
@@ -197,7 +211,7 @@ body {
 
     .pair-label,
     .actions a {
-        font-size: 18px;
+        font-size: 20px;
     }
 
     .card-back h3 {
