@@ -3,52 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Result Page</title>
-    <link rel= "stylesheet" href="/MathStats/CSS/ResultPageDesign.css">
+    <title>Statistics Cards</title>
+    <link rel="stylesheet" href="../CSS/ResultPageDesign.css">
+
+    <!-- Google Font (optional but matches style) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://kit.fontawesome.com/4c6d1c3a6b.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    
 
-        <div class = "result-page">
-               <div class = "Title">
-                <h1>RESULTS</h1>
-                </div>
-            <div class = "inner-page">
-        
-        </div>
+<div class="container">
 
-        <div class = "summary-title">
-            <h1>SUMMARY</h1>
+    <div class="card flip-card" data-metric="mean" tabindex="0" role="button" aria-label="Mean result card">
+        <div class="card-inner">
+            <div class="card-face card-front">
+                <div class="icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                <h2>Mean</h2>
+                <p class="stat-label">Average Value</p>
+                <div class="stat-value" id="meanValue">-</div>
+                <p class="flip-hint">Click to view solution process</p>
             </div>
-        <div class ="panels">
-         <div class = "panel1">
-        <h1>Mean</h1>
-        <h4>Average Value: </h4>
-         <h5>67</h5>
+            <div class="card-face card-back">
+                <h3>Mean Process</h3>
+                <ol class="process-list" id="meanProcessList"></ol>
+                <p class="flip-hint">Click to flip back</p>
+            </div>
+        </div>
     </div>
 
-    <div class = "panel2">
-        <h1>Median</h1>
-        <h4>Middle Value: </h4>
-        <h5>67</h5>
+    <div class="card flip-card" data-metric="median" tabindex="0" role="button" aria-label="Median result card">
+        <div class="card-inner">
+            <div class="card-face card-front">
+                <div class="icon"><i class="fa-solid fa-chart-column"></i></div>
+                <h2>Median</h2>
+                <p class="stat-label">Middle Value</p>
+                <div class="stat-value" id="medianValue">-</div>
+                <p class="flip-hint">Click to view solution process</p>
+            </div>
+            <div class="card-face card-back">
+                <h3>Median Process</h3>
+                <ol class="process-list" id="medianProcessList"></ol>
+                <p class="flip-hint">Click to flip back</p>
+            </div>
+        </div>
     </div>
 
-    <div class = "panel3">
-        <h1>Mode</h1>
-        <h4>Most Frequent: </h4>
-         <h5>67</h5>
+    <div class="card flip-card" data-metric="mode" tabindex="0" role="button" aria-label="Mode result card">
+        <div class="card-inner">
+            <div class="card-face card-front">
+                <div class="icon"><i class="fa-solid fa-chart-pie"></i></div>
+                <h2>Mode</h2>
+                <p class="stat-label">Most Frequent</p>
+                <div class="stat-value" id="modeValue">-</div>
+                <p class="flip-hint">Click to view solution process</p>
+            </div>
+            <div class="card-face card-back">
+                <h3>Mode Process</h3>
+                <ol class="process-list" id="modeProcessList"></ol>
+                <p class="flip-hint">Click to flip back</p>
+            </div>
+        </div>
     </div>
 
-    <div class = "panel4">
-        <h1>Std Dev</h1>
-        <h4>Dispersion (): </h4>
-         <h5>67</h5>
-    </div>
+    <div class="card flip-card" data-metric="dispersion" tabindex="0" role="button" aria-label="Variance and standard deviation result card">
+        <div class="card-inner">
+            <div class="card-face card-front">
+                <div class="icon"><i class="fa-solid fa-wave-square"></i></div>
+                <h2>Variance & Std Dev</h2>
+                <p class="stat-label">Dispersion Measures</p>
+                <div class="stat-pair">
+                    <span class="pair-label">Variance:</span>
+                    <span class="pair-value" id="varianceValue">-</span>
+                </div>
+                <div class="stat-pair">
+                    <span class="pair-label">Std Dev:</span>
+                    <span class="pair-value" id="stdDevValue">-</span>
+                </div>
+                <p class="flip-hint">Click to view solution process</p>
+            </div>
+            <div class="card-face card-back">
+                <h3>Variance & Std Dev Process</h3>
+                <ol class="process-list" id="dispersionProcessList"></ol>
+                <p class="flip-hint">Click to flip back</p>
+            </div>
+        </div>
     </div>
 
-    <div class = "purple-button">
-        <p>Would you like to correct some misinputs?</p>
-        <button>Edit</button>
-    </div>
+</div>
+
+<div class="actions">
+    <a href="Table.html">View Full Table</a>
+    <a href="DataInput.html">Back to Data Input</a>
+</div>
+
+<script>
+    const TABLE_DATA_KEY = "mathStatsTableData";
+    const meanValue = document.getElementById("meanValue");
+    const medianValue = document.getElementById("medianValue");
+    const modeValue = document.getElementById("modeValue");
+    const varianceValue = document.getElementById("varianceValue");
+    const stdDevValue = document.getElementById("stdDevValue");
+    const processListMap = {
+        mean: document.getElementById("meanProcessList"),
+        median: document.getElementById("medianProcessList"),
+        mode: document.getElementById("modeProcessList"),
+        dispersion: document.getElementById("dispersionProcessList")
+    };
+
+    function formatNumber(value) {
+        if (!Number.isFinite(value)) return "-";
+        if (Number.isInteger(value)) return String(value);
+        return Number(value.toFixed(4)).toString();
+    }
+
+    function setFallback() {
+        meanValue.textContent = "No computed data yet";
+        medianValue.textContent = "No computed data yet";
+        modeValue.textContent = "No computed data yet";
+        varianceValue.textContent = "No computed data yet";
+        stdDevValue.textContent = "No computed data yet";
+        for (const key of Object.keys(processListMap)) {
+            processListMap[key].innerHTML = "<li>No process data yet.</li>";
+        }
+    }
+
+    function escapeHtml(text) {
+        return String(text)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#39;");
+    }
+
+    function renderProcessList(metric, steps) {
+        const target = processListMap[metric];
+        if (!target) return;
+        if (!Array.isArray(steps) || steps.length === 0) {
+            target.innerHTML = "<li>No process data yet.</li>";
+            return;
+        }
+        target.innerHTML = steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("");
+    }
+
+    const raw = localStorage.getItem(TABLE_DATA_KEY);
+    if (!raw) {
+        setFallback();
+    } else {
+        try {
+            const payload = JSON.parse(raw);
+            const totals = payload?.totals;
+            if (!totals) {
+                setFallback();
+            } else {
+                meanValue.textContent = formatNumber(totals.mean);
+                medianValue.textContent = formatNumber(totals.median);
+
+                const modes = Array.isArray(totals.modeValues) ? totals.modeValues : [];
+                modeValue.textContent = modes.length > 0
+                    ? modes.map((value) => formatNumber(value)).join(", ")
+                    : "-";
+
+                varianceValue.textContent = formatNumber(totals.variance);
+                stdDevValue.textContent = formatNumber(totals.standardDeviation);
+
+                const processByMetric = payload?.processByMetric || {};
+                renderProcessList("mean", processByMetric.mean);
+                renderProcessList("median", processByMetric.median);
+                renderProcessList("mode", processByMetric.mode);
+                renderProcessList("dispersion", processByMetric.dispersion);
+            }
+        } catch (error) {
+            setFallback();
+        }
+    }
+
+    document.querySelectorAll(".flip-card").forEach((card) => {
+        card.addEventListener("click", () => {
+            card.classList.toggle("is-flipped");
+        });
+
+        card.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+            event.preventDefault();
+            card.classList.toggle("is-flipped");
+        });
+    });
+</script>
+
 </body>
 </html>

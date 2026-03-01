@@ -7,7 +7,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="/MathStats/CSS/DataInputPage.css">
+    <link rel="stylesheet" href="../CSS/DataInputPage.css">
 </head>
 
 <body>
@@ -17,8 +17,8 @@
     
     <div class="card">
 
-        <img src="/MathStats/IMAGES/skull.png" class="skull left" alt="skull">
-        <img src="/MathStats/IMAGES/skull2.png" class="skull right" alt="skull">
+        <img src="../IMAGES/skull.png" class="skull left" alt="skull">
+        <img src="../IMAGES/skull2.png" class="skull right" alt="skull">
 
         <div class="section-title">📊 Data Input</div>
 
@@ -60,8 +60,8 @@
                 <div class="hud-crosshair"></div>
             </div>
         </div>
-        <img src="/MathStats/IMAGES/Kuromi_render.png" class="kuromi-character kuromi-character-primary" alt="Kuromi character">
-        <img src="/MathStats/IMAGES/Tut2.png" class="kuromi-character kuromi-character-secondary" alt="Kuromi character tutorial step 2">
+        <img src="../IMAGES/Kuromi_render.png" class="kuromi-character kuromi-character-primary" alt="Kuromi character">
+        <img src="../IMAGES/Tut2.png" class="kuromi-character kuromi-character-secondary" alt="Kuromi character tutorial step 2">
         <div
             class="kuromi-dialogue kuromi-dialogue-primary"
             id="kuromiDialogue"
@@ -112,7 +112,7 @@
         <button type="button" class="skip-btn" id="skipTutorialBtn">Skip</button>
     </div>
 
-    <audio id="bgMusic" src="/MathStats/KBGM.mp3" preload="auto" autoplay muted playsinline></audio>
+    <audio id="bgMusic" src="../KBGM.mp3" preload="auto" autoplay muted playsinline></audio>
 
     <script>
         const entriesContainer = document.getElementById("entriesContainer");
@@ -134,7 +134,7 @@
         const bgMusic = document.getElementById("bgMusic");
 
         const targetMusicVolume = 0.1 ;
-        const skipMusic = new Audio("/MathStats/KBG.mp3");
+        const skipMusic = new Audio("../KBG.mp3");
         skipMusic.preload = "auto";
         skipMusic.volume = targetMusicVolume;
         const tutorialStartDelayMs = 500;
@@ -591,23 +591,40 @@
                 )
                 .join(" + ");
 
-            const processSteps = [
-                `Given ${parsed.length} data point(s) with frequency values.`,
+            const commonIntroStep = `Given ${parsed.length} data point(s) with frequency values.`;
+            const meanSteps = [
+                commonIntroStep,
                 "Mean formula: Mean = Σfx / Σf",
                 `Compute Σf: ${sumFExpression} = ${formatNumber(totalFrequency)}`,
                 `Compute Σfx: ${sumFXExpression} = ${formatNumber(sumFX)}`,
-                `Final Mean: ${formatNumber(sumFX)} / ${formatNumber(totalFrequency)} = ${formatNumber(mean)}`,
+                `Final Mean: ${formatNumber(sumFX)} / ${formatNumber(totalFrequency)} = ${formatNumber(mean)}`
+            ];
+            const medianSteps = [
+                commonIntroStep,
                 "Median formula (frequency data): locate the middle position(s) in cumulative frequency.",
                 `Total frequency N = ${formatNumber(totalFrequency)}; positions used: ${formatNumber(leftPosition)}${isEven ? ` and ${formatNumber(rightPosition)}` : ""}.`,
                 isEven
                     ? `Median = (${formatNumber(leftMedianValue)} + ${formatNumber(rightMedianValue)}) / 2 = ${formatNumber(median)}`
-                    : `Median = value at position ${formatNumber(leftPosition)} = ${formatNumber(median)}`,
+                    : `Median = value at position ${formatNumber(leftPosition)} = ${formatNumber(median)}`
+            ];
+            const modeSteps = [
+                commonIntroStep,
                 "Mode formula: value(s) with highest frequency.",
-                `Highest frequency = ${formatNumber(maxFrequency)}; Mode value(s) = ${modeExpression}.`,
+                `Highest frequency = ${formatNumber(maxFrequency)}; Mode value(s) = ${modeExpression}.`
+            ];
+            const dispersionSteps = [
+                commonIntroStep,
                 "Standard deviation formula: σ = √( Σf(x - x̄)² / Σf )",
                 `Compute Σf(x - x̄)²: ${stdDevExpression} = ${formatNumber(sumWeightedSquaredDiff)}`,
                 `Variance: ${formatNumber(sumWeightedSquaredDiff)} / ${formatNumber(totalFrequency)} = ${formatNumber(variance)}`,
                 `Standard Deviation: √${formatNumber(variance)} = ${formatNumber(standardDeviation)}`
+            ];
+
+            const processSteps = [
+                ...meanSteps,
+                ...medianSteps.slice(1),
+                ...modeSteps.slice(1),
+                ...dispersionSteps.slice(1)
             ];
 
             const payload = {
@@ -622,12 +639,18 @@
                     variance,
                     standardDeviation
                 },
-                processSteps
+                processSteps,
+                processByMetric: {
+                    mean: meanSteps,
+                    median: medianSteps,
+                    mode: modeSteps,
+                    dispersion: dispersionSteps
+                }
             };
 
             localStorage.setItem(TABLE_DATA_KEY, JSON.stringify(payload));
             saveDraft();
-            window.location.href = "Table.html";
+            window.location.href = "Result.html";
         });
 
         tutorialOverlay.addEventListener("click", (event) => {
