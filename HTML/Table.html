@@ -120,9 +120,15 @@
             processList.innerHTML = "<li>No process steps recorded.</li>";
         }
 
+        const modeText = Array.isArray(totals.modeValues) && totals.modeValues.length > 0
+            ? totals.modeValues.map((value) => formatNumber(value)).join(", ")
+            : "-";
+
         summaryBox.innerHTML =
             `<strong>Summary:</strong> Σf = ${formatNumber(totals.totalFrequency)}, ` +
-            `Σfx = ${formatNumber(totals.sumFX)}, Mean = ${formatNumber(totals.mean)}`;
+            `Σfx = ${formatNumber(totals.sumFX)}, Mean = ${formatNumber(totals.mean)}, ` +
+            `Median = ${formatNumber(totals.median)}, Mode = ${modeText}, ` +
+            `Standard Deviation = ${formatNumber(totals.standardDeviation)}`;
     }
 
     const raw = localStorage.getItem(TABLE_DATA_KEY);

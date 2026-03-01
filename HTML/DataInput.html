@@ -463,6 +463,15 @@
             return Number(value.toFixed(4)).toString();
         }
 
+        function findValueAtPosition(sortedPairs, position) {
+            let runningTotal = 0;
+            for (const pair of sortedPairs) {
+                runningTotal += pair.frequency;
+                if (runningTotal >= position) return pair.value;
+            }
+            return sortedPairs[sortedPairs.length - 1].value;
+        }
+
         calcBtn.addEventListener("click", () => {
             const rows = getRows();
             const parsed = [];
@@ -535,17 +544,70 @@
             const sumFX = tableRows.reduce((sum, row) => sum + row.fx, 0);
             const mean = sumFX / totalFrequency;
 
+            const sortedPairs = tableRows
+                .map((row) => ({
+                    value: row.midpoint,
+                    frequency: row.frequency
+                }))
+                .sort((a, b) => a.value - b.value);
+
+            const isEven = totalFrequency % 2 === 0;
+            const leftPosition = isEven ? totalFrequency / 2 : (totalFrequency + 1) / 2;
+            const rightPosition = isEven ? leftPosition + 1 : leftPosition;
+            const leftMedianValue = findValueAtPosition(sortedPairs, leftPosition);
+            const rightMedianValue = findValueAtPosition(sortedPairs, rightPosition);
+            const median = (leftMedianValue + rightMedianValue) / 2;
+
+            const maxFrequency = Math.max(...sortedPairs.map((pair) => pair.frequency));
+            const modeValues = sortedPairs
+                .filter((pair) => pair.frequency === maxFrequency)
+                .map((pair) => pair.value);
+
+            const squaredDeviationTerms = tableRows.map((row) => {
+                const diff = row.midpoint - mean;
+                return {
+                    midpoint: row.midpoint,
+                    frequency: row.frequency,
+                    squaredDiff: diff * diff,
+                    weightedSquaredDiff: row.frequency * diff * diff
+                };
+            });
+            const sumWeightedSquaredDiff = squaredDeviationTerms.reduce(
+                (sum, term) => sum + term.weightedSquaredDiff,
+                0
+            );
+            const variance = sumWeightedSquaredDiff / totalFrequency;
+            const standardDeviation = Math.sqrt(variance);
+
             const sumFExpression = parsed.map((row) => row.f).join(" + ");
             const sumFXExpression = tableRows
                 .map((row) => `(${formatNumber(row.midpoint)} × ${row.frequency})`)
                 .join(" + ");
+            const modeExpression = modeValues.map((value) => formatNumber(value)).join(", ");
+            const stdDevExpression = squaredDeviationTerms
+                .map(
+                    (term) =>
+                        `${term.frequency}(${formatNumber(term.midpoint)} - ${formatNumber(mean)})²`
+                )
+                .join(" + ");
 
             const processSteps = [
                 `Given ${parsed.length} data point(s) with frequency values.`,
-                "Formula used: Mean = Σfx / Σf",
+                "Mean formula: Mean = Σfx / Σf",
                 `Compute Σf: ${sumFExpression} = ${formatNumber(totalFrequency)}`,
                 `Compute Σfx: ${sumFXExpression} = ${formatNumber(sumFX)}`,
-                `Final Mean: ${formatNumber(sumFX)} / ${formatNumber(totalFrequency)} = ${formatNumber(mean)}`
+                `Final Mean: ${formatNumber(sumFX)} / ${formatNumber(totalFrequency)} = ${formatNumber(mean)}`,
+                "Median formula (frequency data): locate the middle position(s) in cumulative frequency.",
+                `Total frequency N = ${formatNumber(totalFrequency)}; positions used: ${formatNumber(leftPosition)}${isEven ? ` and ${formatNumber(rightPosition)}` : ""}.`,
+                isEven
+                    ? `Median = (${formatNumber(leftMedianValue)} + ${formatNumber(rightMedianValue)}) / 2 = ${formatNumber(median)}`
+                    : `Median = value at position ${formatNumber(leftPosition)} = ${formatNumber(median)}`,
+                "Mode formula: value(s) with highest frequency.",
+                `Highest frequency = ${formatNumber(maxFrequency)}; Mode value(s) = ${modeExpression}.`,
+                "Standard deviation formula: σ = √( Σf(x - x̄)² / Σf )",
+                `Compute Σf(x - x̄)²: ${stdDevExpression} = ${formatNumber(sumWeightedSquaredDiff)}`,
+                `Variance: ${formatNumber(sumWeightedSquaredDiff)} / ${formatNumber(totalFrequency)} = ${formatNumber(variance)}`,
+                `Standard Deviation: √${formatNumber(variance)} = ${formatNumber(standardDeviation)}`
             ];
 
             const payload = {
@@ -553,7 +615,12 @@
                 totals: {
                     totalFrequency,
                     sumFX,
-                    mean
+                    mean,
+                    median,
+                    modeValues,
+                    maxFrequency,
+                    variance,
+                    standardDeviation
                 },
                 processSteps
             };
