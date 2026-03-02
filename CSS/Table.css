@@ -195,6 +195,7 @@ tbody td {
 
     h1 {
         font-size: 30px;
+        font-family: "Luffy";
     }
 
     thead th,
@@ -224,4 +225,9 @@ tbody td {
     .table-nav-actions .process-link {
         text-align: center;
     }
+}
+
+@font-face{
+    font-family: "Luffy";
+    src: url(/Gomuno\ Bubble.ttf);
 }
