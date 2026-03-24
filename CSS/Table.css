@@ -33,6 +33,7 @@ h1 {
     color: #4b1c72;
     font-size: 38px;
     margin-bottom: 20px;
+    font-family: "Luffy";
 }
 
 table {
@@ -188,15 +189,13 @@ tbody td {
     margin-top: 0;
 }
 
+li{
+    font-family: sans-serif;
+}
 @media (max-width: 1024px) {
     body {
         padding: 20px;
-    }
-
-    h1 {
-        font-size: 30px;
-        font-family: "Luffy";
-    }
+    } q
 
     thead th,
     tbody td {
@@ -229,5 +228,21 @@ tbody td {
 
 @font-face{
     font-family: "Luffy";
-    src: url(/Gomuno\ Bubble.ttf);
+    src: url(/MathStats/Gomuno\ Bubble.ttf) format("truetype");
+}
+
+@font-face{
+    font-family: "Winter";
+    src: url(/MathStats/Blue\ Winter.ttf) format("truetype");
+}
+
+@font-face{
+    font-family: "Weeknd";
+    src: url(/MathStats/Starborn.ttf) format("truetype");
+
+}
+
+@font-face{
+    font-family: "Teen Titans";
+    src: url(/MathStats/TitanOne-Regular.ttf) format("truetype");
 }

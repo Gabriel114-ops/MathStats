@@ -24,11 +24,11 @@ body {
   color: var(--accent);
   font-family: "Source Sans 3", sans-serif;
   opacity: 0;
-  animation: pageFadeIn 1s ease forwards;
+  animation: pageFadeIn 3s ease forwards;
 }
 body.is-leaving {
   pointer-events: none;
-  animation: pageFadeOut 1s ease forwards;
+  animation: pageFadeOut 3s ease forwards;
 }
 @keyframes slideUp {
   from {
@@ -164,9 +164,10 @@ button:hover {
   border-radius: 50%;
   background: #60509D;
   top: 21% !important;
-  transform: translateY(-50%) !important;
-  left: 70% !important;
-  transform: translateX(-50%) !important;
+  transform: translateY(-50%) ;
+  left: 55% !important;
+  transform: translateX(-50%) ;
+  animation: Zoombig 2s ease-out forwards;
 }
 .circle {
   position: relative !important;
@@ -175,9 +176,10 @@ button:hover {
   border-radius: 50%;
   background: #A48ECA;
   top: 8% !important;
-  transform: translateY(-50%) !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
+  transform: translateY(-50%) ;
+  left: 8% !important;
+  transform: translateX(-50%) ;
+  animation: Zoombig 3s ease-out forwards;
 }
 .O {
   position: absolute !important;
@@ -186,9 +188,10 @@ button:hover {
   border-radius: 50%;
   background: #60509D;
   top: 74% !important;
-  transform: translateY(-50%) !important;
-  left: 16% !important;
-  transform: translateX(-50%) !important;
+  transform: translateY(-50%) ;
+  left: 9% !important;
+  transform: translateX(-50%) ;
+  animation: Zoombig 3s ease-out forwards;
 }
 .O2 {
   position: absolute !important;
@@ -197,9 +200,10 @@ button:hover {
   border-radius: 50%;
   background: #60509D;
   top: 30% !important;
-  transform: translateY(-50%) !important;
-  left: 0% !important;
-  transform: translateX(-50%) !important;
+  transform: translateY(-50%) ;
+  left: -8% !important;
+  transform: translateX(-50%) ;
+  animation: Zoombig 3.5s ease-out forwards;
 }
 .O3 {
   position: absolute !important;
@@ -208,9 +212,10 @@ button:hover {
   border-radius: 50%;
   background: #60509D;
   top: -3% !important;
-  transform: translateY(-50%) !important;
-  left: 40% !important;
-  transform: translateX(-50%) !important;
+  transform: translateY(-50%) ;
+  left: 35% !important;
+  transform: translateX(-50%) ;
+  animation: Zoombig2 3s ease-out forwards;
 }
 .O4 {
   position: absolute !important;
@@ -252,9 +257,10 @@ button:hover {
   border-radius: 50%;
   background: #A48ECA;
   top: -5% !important;
-  transform: translateY(-50%) !important;
-  left: 2% !important;
-  transform: translateX(-50%) !important;
+  transform: translateY(-50%) ;
+  left: -2% !important;
+  transform: translateX(-50%) ;
+  animation: slideToLeft 3s ease-out forwards;
 }
 .O8 {
   position: absolute !important;
@@ -263,9 +269,10 @@ button:hover {
   border-radius: 50%;
   background: #A48ECA;
   top: 2% !important;
-  transform: translateY(-50%) !important;
-  left: 10% !important;
-  transform: translateX(-50%) !important;
+  transform: translateY(-50%) ;
+  left: 8% !important;
+  transform: translateX(-50%) ;
+  animation: slideToLeft 1.5s ease-out forwards;
 }
 
 /*.Laugh {
@@ -320,22 +327,24 @@ button:hover {
   display: block !important;
   top: 18% !important;
   left: 60% !important;
-  transform: scale(1) rotate(5deg);
-  animation: walkBeat 3.0s ease-in-out infinite !important;
+  transform: scale(1.25) rotate(5deg) ;
+  animation: Zoombigwink 2.5s ease-out forwards, walkBeat 3s ease-in-out 3s infinite !important;
 }
 .Cloud {
   position: absolute !important;
   display: block !important;
-  top: 73% !important;
-  left: -11% !important;
+  top: 75% !important;
+  left: -14% !important;
   transform: scale(0.8) rotate(0deg);
+  animation: slideToLeft 3s ease-out forwards;
 }
 .Cloud2 {
   position: absolute !important;
   display: block !important;
-  top: -14% !important;
-  left: 65% !important;
-  transform: scale(0.7) rotate(0deg);
+  top: -20% !important;
+  left: 69% !important;
+  transform: scale(0.8) rotate(0deg);
+  animation: slideToRight 3s ease-out forwards;
 }
 .skull {
   position: absolute !important;
@@ -358,11 +367,12 @@ button:hover {
 .divide {
   position: absolute !important;
   top: 30% !important;
-  transform: translateY(-50%) !important;
+  transform: translateY(-50%) ;
   left: 69% !important;
-  transform: translateX(-50%) !important;
+  transform: translateX(-50%) ;
   scale: 0.25;
   rotate: -20deg;
+  animation: zoombig 3s ease-out forwards;
 }
 
 @keyframes floatLogo {
@@ -373,9 +383,9 @@ button:hover {
 }
 
 @keyframes walkBeat {
-  0% { transform: translateY(0) scale(1.25) rotate(3deg); }
+  0% { transform: translateY(0) scale(1.25) rotate(0deg); }
   50% { transform: translateY(-4px) scale(1.28) rotate(5deg); }
-  100% { transform: translateY(0) scale(1.25) rotate(3deg); }
+  100% { transform: translateY(0) scale(1.25) rotate(0deg); }
 }
 
 @keyframes glowPulse {
@@ -408,8 +418,43 @@ button:hover {
   to { opacity: 0; }
 }
 
+@keyframes slideToRight {
+  from {
+    transform: translateX(60px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}  to { opacity: 1; }
 
+@keyframes slideToLeft {
+  from {
+    scale: 0.9;
+    transform: translateX(-60px);
+    opacity: 0;
+  }
+  to {
+    scale: 0.9;
+    transform: translateX(0);
+    opacity: 1;
+  }
+}  to { opacity: 1; }
 
+@keyframes Zoombig {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
 
+@keyframes Zoombig2 {
+  0% { transform: scale(0); }
+  50% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
 
-
+@keyframes Zoombigwink {
+  0% { transform: scale(0); }
+  50% { transform: scale(0); }
+  100% { transform: scale(1.25); }
+}
