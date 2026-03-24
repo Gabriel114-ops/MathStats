@@ -24,6 +24,10 @@ body {
                 0 0 0 5px #d84ab7 inset;
 }
 
+a{
+    font-family: sans-serif;
+}
+
 .table-wrapper {
     width: 100%;
     overflow-x: auto;
@@ -228,7 +232,7 @@ li{
 
 @font-face{
     font-family: "Luffy";
-    src: url(/MathStats/Gomuno\ Bubble.ttf) format("truetype");
+    src: url(/Gomuno\ Bubble.ttf) format("truetype");
 }
 
 @font-face{
