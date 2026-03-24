@@ -154,7 +154,11 @@
         const hudIntroDurationMs = 1000;
         const hudShrinkDurationMs = 2000;
         const tutorialOutroDurationMs = 350;
-        const guidedTutorialDelayMs = 2100;
+        const secondaryDialogueDelayMs = 1200;
+        const secondaryDialogueInDurationMs = 700;
+        const secondaryDialogueHoldMs = 2000;
+        const guidedTutorialDelayMs =
+            secondaryDialogueDelayMs + secondaryDialogueInDurationMs + secondaryDialogueHoldMs;
         let phaseSmallTimerId;
         let phaseLeftTimerId;
         let guidedPhaseTimerId;

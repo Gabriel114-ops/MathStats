@@ -227,12 +227,39 @@ body.tutorial-open .page-content {
     transform: translate(-50%, -50%) scale(1);
 }
 
+.tutorial-overlay.step-interval .kuromi-dialogue-guided,
+.tutorial-overlay.step-data .kuromi-dialogue-guided,
+.tutorial-overlay.step-actions .kuromi-dialogue-guided {
+    left: clamp(56vw, 59vw, 63vw);
+    top: clamp(18vh, 21vh, 26vh);
+    max-width: min(50vw, 760px);
+    min-width: min(36vw, 500px);
+    padding: 22px 26px;
+    font-size: clamp(19px, 1.55vw, 28px);
+    line-height: 1.38;
+}
+
+.tutorial-overlay.phase-guided .kuromi-dialogue-guided::after {
+    content: "";
+    position: absolute;
+    left: -60px;
+    top: 68%;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(246, 241, 255, 0.97);
+    box-shadow:
+        -46px 14px 0 0 rgba(240, 229, 248, 0.94),
+        -70px 34px 0 -2px rgba(234, 219, 244, 0.88);
+    pointer-events: none;
+}
+
 .tutorial-demo-wrap {
     position: absolute;
-    right: 13.5vw;
-    top: 50%;
-    width: min(44vw, 620px);
-    transform: translateY(-50%);
+    left: clamp(59vw, 62vw, 66vw);
+    top: clamp(60vh, 63vh, 68vh);
+    width: min(48vw, 760px);
+    transform: translate(-50%, -50%);
     z-index: 4;
     opacity: 0;
     pointer-events: none;
@@ -246,11 +273,11 @@ body.tutorial-open .page-content {
 .tutorial-demo {
     display: none;
     border: 2px solid rgba(246, 241, 255, 0.75);
-    border-radius: 18px;
-    padding: 18px 20px;
+    border-radius: 24px;
+    padding: 24px 28px;
     background: linear-gradient(165deg, rgba(246, 241, 255, 0.97), rgba(224, 199, 231, 0.94));
     color: #4d3f83;
-    box-shadow: 0 14px 34px rgba(24, 23, 31, 0.28);
+    box-shadow: 0 18px 40px rgba(24, 23, 31, 0.3);
 }
 
 .tutorial-overlay.step-interval .tutorial-demo-interval,
@@ -260,27 +287,27 @@ body.tutorial-open .page-content {
 }
 
 .tutorial-demo-title {
-    font-size: clamp(17px, 1.4vw, 22px);
+    font-size: clamp(22px, 1.7vw, 30px);
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
     color: #8a1f84;
 }
 
 .tutorial-demo-label {
     display: block;
-    margin-top: 6px;
+    margin-top: 8px;
     margin-left: 0;
-    font-size: 17px;
+    font-size: clamp(18px, 1.35vw, 24px);
 }
 
 .tutorial-fake-input {
-    margin-top: 8px;
+    margin-top: 12px;
     border: 2px solid #b14fd4;
-    border-radius: 12px;
-    min-height: 48px;
+    border-radius: 14px;
+    min-height: 58px;
     background: #f1e8f4;
-    padding: 9px 11px;
-    font-size: 24px;
+    padding: 12px 14px;
+    font-size: 28px;
     display: flex;
     align-items: center;
     gap: 3px;
@@ -294,8 +321,8 @@ body.tutorial-open .page-content {
 }
 
 .tutorial-demo-note {
-    margin-top: 9px;
-    font-size: 14px;
+    margin-top: 13px;
+    font-size: clamp(15px, 1.05vw, 18px);
     color: #5e487e;
 }
 
@@ -303,13 +330,13 @@ body.tutorial-open .page-content {
     display: grid;
     grid-template-columns: 1fr 1fr 88px;
     align-items: center;
-    gap: 8px;
-    margin-top: 7px;
-    padding: 8px 10px;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 11px 13px;
     border: 1px solid rgba(96, 80, 157, 0.28);
-    border-radius: 10px;
+    border-radius: 12px;
     background: rgba(255, 255, 255, 0.62);
-    min-height: 52px;
+    min-height: 60px;
 }
 
 .tutorial-row-header {
@@ -319,7 +346,7 @@ body.tutorial-open .page-content {
 }
 
 .tutorial-row-value {
-    font-size: 21px;
+    font-size: 24px;
     transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
@@ -333,8 +360,8 @@ body.tutorial-open .page-content {
     border-radius: 10px;
     background: #f2f2f2;
     color: #8a1f84;
-    height: 40px;
-    font-size: 20px;
+    height: 46px;
+    font-size: 24px;
 }
 
 .tutorial-row-value.is-removing .tutorial-remove-btn {
@@ -349,10 +376,10 @@ body.tutorial-open .page-content {
 }
 
 .tutorial-action-btn {
-    height: 52px;
+    height: 60px;
     border-radius: 10px;
     border: 2px solid #b14fd4;
-    font-size: clamp(14px, 1.1vw, 18px);
+    font-size: clamp(16px, 1.2vw, 20px);
     color: #7b2e83;
 }
 
@@ -975,16 +1002,51 @@ input:focus {
         left: 50%;
     }
 
+    .tutorial-overlay.step-interval .kuromi-dialogue-guided,
+    .tutorial-overlay.step-data .kuromi-dialogue-guided,
+    .tutorial-overlay.step-actions .kuromi-dialogue-guided {
+        top: calc(50% - min(30vw, 210px));
+        max-width: min(82vw, 460px);
+        min-width: 0;
+        padding: 16px 18px;
+        font-size: clamp(15px, 3.7vw, 20px);
+    }
+
+    .tutorial-overlay.phase-guided .kuromi-dialogue-guided::after {
+        left: -12px;
+        top: calc(100% + 8px);
+        width: 16px;
+        height: 16px;
+        box-shadow:
+            -36px 16px 0 0 rgba(240, 229, 248, 0.94),
+            -52px 34px 0 -2px rgba(234, 219, 244, 0.88);
+    }
+
     .tutorial-demo-wrap {
-        right: 56%;
+        left: 56%;
+        right: auto;
         top: calc(50% + min(34vw, 220px));
         transform: translate(50%, -50%);
-        width: min(88vw, 560px);
+        width: min(90vw, 620px);
+    }
+
+    .tutorial-demo {
+        padding: 18px 18px;
+        border-radius: 18px;
+    }
+
+    .tutorial-demo-title {
+        font-size: clamp(18px, 4.4vw, 24px);
+        margin-bottom: 8px;
+    }
+
+    .tutorial-demo-label {
+        font-size: clamp(15px, 3.8vw, 19px);
     }
 
     .tutorial-fake-input {
-        font-size: 20px;
-        min-height: 44px;
+        font-size: 21px;
+        min-height: 46px;
     }
 
     .tutorial-fake-row {
