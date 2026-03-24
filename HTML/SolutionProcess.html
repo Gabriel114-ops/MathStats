@@ -44,13 +44,7 @@
     }
 
     function emphasizeProcessLabels(stepText) {
-        const escaped = escapeHtml(stepText);
-        return escaped
-            .replaceAll("Mean:", "<strong>Mean:</strong>")
-            .replaceAll("Median:", "<strong>Median:</strong>")
-            .replaceAll("Mode:", "<strong>Mode:</strong>")
-            .replaceAll("Variance:", "<strong>Variance:</strong>")
-            .replaceAll("Standard Deviation:", "<strong>Standard Deviation:</strong>");
+        return escapeHtml(stepText);
     }
 
     function renderEmptyState() {
@@ -77,8 +71,29 @@
             if (steps.length === 0) {
                 renderEmptyState();
             } else {
+                const useInterpolation =
+                    Boolean(payload?.useInterpolation) ||
+                    steps.some((step) => /interpolated\s+grouped\s+data/i.test(String(step)));
+
+                const highlightedStepNumbers = useInterpolation
+                    ? [5, 8, 11, 14, 15]
+                    : [5, 8, 10, 13, 14];
+                const highlightedSet = new Set(highlightedStepNumbers);
+
                 processList.innerHTML = steps
-                    .map((step) => `<li>${emphasizeProcessLabels(step)}</li>`)
+                    .map((step, index) => {
+                        const stepNumber = index + 1;
+                        const numberClass = highlightedSet.has(stepNumber)
+                            ? "process-step-number is-highlight"
+                            : "process-step-number";
+
+                        return `
+                            <li>
+                                <span class="${numberClass}">${stepNumber}</span>
+                                <span class="process-step-text">${emphasizeProcessLabels(step)}</span>
+                            </li>
+                        `;
+                    })
                     .join("");
 
                 const modeText = Array.isArray(totals?.modeValues) && totals.modeValues.length > 0

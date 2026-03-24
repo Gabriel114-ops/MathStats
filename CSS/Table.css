@@ -95,13 +95,65 @@ tbody td {
 }
 
 #processList {
-    margin-left: 28px;
+    margin: 12px 0 0;
+    padding: 0;
     font-size: 19px;
     line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    list-style: none;
 }
 
 #processList li {
-    margin-bottom: 8px;
+    list-style-position: inside;
+    width: 100%;
+    margin: 0;
+    padding: 12px 14px;
+    border: 2px solid #d84ab7;
+    border-radius: 12px;
+    background: #f5ecf9;
+    box-shadow: 0 1px 0 rgba(75, 28, 114, 0.08);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.process-step-number {
+    flex: 0 0 auto;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 2px solid rgba(216, 74, 183, 0.75);
+    background: #eee4f3;
+    color: #4b1c72;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.process-step-number.is-highlight {
+    background: rgba(255, 234, 109, 0.95);
+    border-color: rgba(92, 42, 125, 0.6);
+    box-shadow: 0 0 0 3px rgba(255, 234, 109, 0.35);
+}
+
+.process-step-text {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.process-highlight {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: rgba(255, 234, 109, 0.9);
+    border: 1px solid rgba(92, 42, 125, 0.25);
+    color: #4b1c72;
+    font-weight: 800;
 }
 
 .summary {
@@ -199,7 +251,7 @@ li{
 @media (max-width: 1024px) {
     body {
         padding: 20px;
-    } q
+    }
 
     thead th,
     tbody td {
