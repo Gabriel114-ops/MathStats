@@ -33,6 +33,7 @@ body {
 
 .page-content {
     width: 100%;
+    position: relative;
     transition: filter 0.55s ease;
 }
 
@@ -695,64 +696,58 @@ body.tutorial-open .page-content {
 
 .skull {
     position: absolute;
-    width: 50px;
+    width: clamp(46px, 3.8vw, 62px);
     height: auto;
-    filter: blur(3px);
+    filter: blur(2.4px);
     pointer-events: none;
-    z-index: 0;
+    z-index: 0;;
 }
 
 .skull.left {
-    position: fixed;
-    left: -28px;
-    top: 10%;
+    left: 7% !important;
+    top: 8%;
     animation: zoom 3s ease-in-out infinite;
 }
 
 .skull.right {
-    position: fixed;
-    right: -28px;
-    top: 78%;
+    right: 7% !important;
+    top: 19%;
     animation: zoom 4.5s ease-in-out infinite;
 }
 
-.deco {
-    position: fixed;
-}
-
 .deco-1 {
-    top: 8%;
-    left: -30px;
+    top: 30%;
+    left: 8.5% !important;
     animation: zoom 3.6s ease-in-out infinite;
 }
 
 .deco-2 {
-    top: 18%;
-    right: -30px;
+    top: 41%;
+    right: calc(var(--edge-offset) + 3px);
     animation: zoom 4.2s ease-in-out infinite;
 }
 
 .deco-3 {
-    top: 35%;
-    left: -32px;
+    top: 52%;
+    left: 10% !important;
     animation: zoom 4.8s ease-in-out infinite;
 }
 
 .deco-4 {
-    top: 48%;
-    right: -32px;
+    top: 63%;
+    right: calc(var(--edge-offset) + 20px);
     animation: zoom 3.9s ease-in-out infinite;
 }
 
 .deco-5 {
-    top: 73%;
-    left: -30px;
+    top: 74%;
+    left: calc(var(--edge-offset) + 10px);
     animation: zoom 4.4s ease-in-out infinite;
 }
 
 .deco-6 {
-    top: 82%;
-    right: -30px;
+    top: 85%;
+    right: var(--edge-offset);
     animation: zoom 5s ease-in-out infinite;
 }
 
