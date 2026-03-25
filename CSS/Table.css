@@ -287,26 +287,27 @@ li{
 
 @font-face{
     font-family: "Luffy";
-    src: url(/MathStats/Gomuno\ Bubble.ttf) format("truetype");
+    src: url("../Gomuno Bubble.ttf") format("truetype");
 }
 
 @font-face{
     font-family: "Winter";
-    src: url(/MathStats/Blue\ Winter.ttf) format("truetype");
+    src: url("../Blue Winter.ttf") format("truetype");
 }
 
 @font-face{
     font-family: "Weeknd";
-    src: url(/MathStats/Starborn.ttf) format("truetype");
+    src: url("../Starborn.ttf") format("truetype");
 
 }
 
 @font-face{
     font-family: "Teen Titans";
-    src: url(/MathStats/TitanOne-Regular.ttf) format("truetype");
+    src: url("../TitanOne-Regular.ttf") format("truetype");
 }
 
 @font-face{
     font-family: "Hello";
-    src: url(/MathStats/Funny\ Hello.otf) format("truetype");
+    src: url("../Funny Hello.otf") format("opentype");
+    font-display: swap;
 }

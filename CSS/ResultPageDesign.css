@@ -226,5 +226,6 @@ body {
 
 @font-face {
     font-family: "Hello";
-    src: url("/MathStats/Funny\ Hello.otf") format("truetype");
+    src: url("../Funny Hello.otf") format("opentype");
+    font-display: swap;
 }
