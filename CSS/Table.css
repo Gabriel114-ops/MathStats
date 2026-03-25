@@ -37,7 +37,7 @@ h1 {
     color: #4b1c72;
     font-size: 38px;
     margin-bottom: 20px;
-    font-family: "Luffy";
+    font-family: "Hello";
 }
 
 table {
@@ -54,6 +54,7 @@ thead th {
     padding: 15px;
     border: 2px solid #d84ab7;
     text-align: center;
+    font-family: "Hello";
 }
 
 tbody td {
@@ -65,6 +66,7 @@ tbody td {
     padding: 10px;
     word-break: break-word;
     overflow-wrap: anywhere;
+    font-family: sans-serif;
 }
 
 .total-row td {
@@ -158,6 +160,7 @@ tbody td {
 
 .summary {
     margin-top: 12px;
+    font-family: "Luffy";
 }
 
 .summary-title {
@@ -284,7 +287,7 @@ li{
 
 @font-face{
     font-family: "Luffy";
-    src: url(/Gomuno\ Bubble.ttf) format("truetype");
+    src: url(/MathStats/Gomuno\ Bubble.ttf) format("truetype");
 }
 
 @font-face{
@@ -301,4 +304,9 @@ li{
 @font-face{
     font-family: "Teen Titans";
     src: url(/MathStats/TitanOne-Regular.ttf) format("truetype");
+}
+
+@font-face{
+    font-family: "Hello";
+    src: url(/MathStats/Funny\ Hello.otf) format("truetype");
 }

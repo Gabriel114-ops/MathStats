@@ -682,7 +682,7 @@ body.tutorial-open .page-content {
     margin-top: 20px;
     margin-bottom: 20px;
     font-size: 100px;
-    font-family: cursive;
+    font-family: "Hello";
     font-weight: 600;
     background: linear-gradient(90deg, #60509D, #D732A8, #60509D);
     background-size: 200% 100%;
@@ -704,50 +704,50 @@ body.tutorial-open .page-content {
 }
 
 .skull.left {
-    left: 7% !important;
+    left: 5% !important;
     top: 8%;
     animation: zoom 3s ease-in-out infinite;
 }
 
 .skull.right {
-    right: 7% !important;
+    right: 5% !important;
     top: 19%;
     animation: zoom 4.5s ease-in-out infinite;
 }
 
 .deco-1 {
     top: 30%;
-    left: 8.5% !important;
+    left: 10% !important;
     animation: zoom 3.6s ease-in-out infinite;
 }
 
 .deco-2 {
     top: 41%;
-    right: calc(var(--edge-offset) + 3px);
+    right: 10% !important;
     animation: zoom 4.2s ease-in-out infinite;
 }
 
 .deco-3 {
     top: 52%;
-    left: 10% !important;
+    left: 8.5% !important;
     animation: zoom 4.8s ease-in-out infinite;
 }
 
 .deco-4 {
     top: 63%;
-    right: calc(var(--edge-offset) + 20px);
+    right: 8.5% !important;
     animation: zoom 3.9s ease-in-out infinite;
 }
 
 .deco-5 {
     top: 74%;
-    left: calc(var(--edge-offset) + 10px);
+    left: 6% !important;
     animation: zoom 4.4s ease-in-out infinite;
 }
 
 .deco-6 {
     top: 85%;
-    right: var(--edge-offset);
+    right: 6% !important;
     animation: zoom 5s ease-in-out infinite;
 }
 
@@ -775,8 +775,8 @@ body.tutorial-open .page-content {
     font-size: 50px;
     color: #c44eb7;
     margin-bottom: 20px;
-    transform: translateX(100%) translateY(-60%);
-    
+    transform: translateX(90%) translateY(-60%);
+    font-family: "Hello";
 }
 
 label {
@@ -1057,4 +1057,9 @@ input:focus {
     0% { transform: scale(1) rotate(0deg); }
     60% { transform: scale(1.25) rotate(10deg); }
     100% { transform: scale(1) rotate(0deg); }
+}
+
+@font-face {
+    font-family: "Hello";
+    src: url("/MathStats/Funny\ Hello.otf") format("truetype");
 }
