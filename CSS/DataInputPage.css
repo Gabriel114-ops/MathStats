@@ -704,27 +704,24 @@ body.tutorial-open .page-content {
 }
 
 .skull.left {
-    left: 5% !important;
-    top: 8%;
+    position: fixed !important;
+    left: 25% !important;
+    top: 9%;
     animation: zoom 3s ease-in-out infinite;
 }
 
 .skull.right {
-    right: 5% !important;
-    top: 19%;
+    position: fixed !important;
+    right: 30% !important;
+    top: 8%;
     animation: zoom 4.5s ease-in-out infinite;
 }
 
-.deco-1 {
-    top: 30%;
-    left: 10% !important;
-    animation: zoom 3.6s ease-in-out infinite;
-}
-
 .deco-2 {
-    top: 41%;
-    right: 10% !important;
-    animation: zoom 4.2s ease-in-out infinite;
+    position: absolute !important;
+    top: 80% !important;
+    right: 50% !important;
+    transform: scale(0.7);
 }
 
 .deco-3 {
@@ -740,15 +737,16 @@ body.tutorial-open .page-content {
 }
 
 .deco-5 {
-    top: 74%;
-    left: 6% !important;
-    animation: zoom 4.4s ease-in-out infinite;
+    position: fixed !important;
+    top: 57% !important;
+    left: 77% !important;
+    transform: scale(0.6);
 }
 
 .deco-6 {
-    top: 85%;
-    right: 6% !important;
-    animation: zoom 5s ease-in-out infinite;
+    position: fixed !important;
+    top: 25% !important;
+    left: 1% !important;
 }
 
 .card {
