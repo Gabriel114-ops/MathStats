@@ -75,7 +75,7 @@ Future Improvements
 - Add downloadable/printable solution reports.
 
 Version
-Version: 1.0
+Version: 1.1
 Last Updated: 2026-03-25
 
 License / Usage
