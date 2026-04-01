@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Stats</title>
+    <link rel="stylesheet" href="OnePage.css">
+</head>
+<body>
+    <div class="bg-orb orb-1" aria-hidden="true"></div>
+    <div class="bg-orb orb-2" aria-hidden="true"></div>
+    <div class="bg-orb orb-3" aria-hidden="true"></div>
+
+    <img class="deco deco-left" src="../IMAGES/PeekingK.gif" alt="decorative Kuromi">
+    <img class="deco deco-right" src="../IMAGES/LaughingK.gif" alt="decorative Kuromi">
+    <img class="deco deco-skull-a" src="../IMAGES/skull.png" alt="decorative skull">
+    <img class="deco deco-skull-b" src="../IMAGES/skull2.png" alt="decorative skull">
+
+    <main class="app-shell">
+        <header class="app-title fade-in">
+            <h1> MATH STATS </h1>
+            <p>A simple app designed to compute mean, median, and mode instantly.</p>
+        </header>
+
+        <section class="layout-grid">
+            <article class="panel input-panel fade-in-up">
+                <h2>📊 Data Input</h2>
+
+                <label for="intervalInput">Intervals (Optional)</label>
+                <input id="intervalInput" type="text" placeholder="0-9,10-19,20-29,30-39">
+                <p class="sub-note">Leave empty for ungrouped data, or enter one interval per row.</p>
+
+                <div class="toggle-row">
+                    <span>Interpolation Method</span>
+                    <label class="switch">
+                        <input id="interpolationToggle" type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <h3>Data & Frequency</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data (x)</th>
+                                <th>Frequency (f)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="entriesContainer"></tbody>
+                    </table>
+                </div>
+
+                <div class="btn-row">
+                    <button id="addBtn" class="btn ghost" type="button">+ Add Row</button>
+                    <button id="clearBtn" class="btn ghost" type="button">Clear All</button>
+                    <button id="calculateBtn" class="btn primary" type="button">Calculate</button>
+                </div>
+
+                <div class="quick-actions">
+                    <button id="scrollResultBtn" class="text-btn" type="button">Jump to Result</button>
+                    <button id="copySummaryBtn" class="text-btn" type="button">Copy Summary</button>
+                    <button id="replayTutorialBtn" class="text-btn" type="button">Replay Tutorial</button>
+                </div>
+            </article>
+
+            <article class="panel result-panel fade-in-up delay-1" id="resultsPanel">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span>Mean</span>
+                        <strong id="meanValue">-</strong>
+                    </div>
+                    <div class="stat-card">
+                        <span>Median</span>
+                        <strong id="medianValue">-</strong>
+                    </div>
+                    <div class="stat-card">
+                        <span>Mode</span>
+                        <strong id="modeValue">-</strong>
+                    </div>
+                    <div class="stat-card">
+                        <span>Variance & Std Dev</span>
+                        <strong id="dispersionValue">-</strong>
+                    </div>
+                </div>
+
+                <div class="process-box">
+                    <div class="tab-row">
+                        <button type="button" class="tab-btn is-active" data-metric="mean">Mean Process</button>
+                        <button type="button" class="tab-btn" data-metric="median">Median Process</button>
+                        <button type="button" class="tab-btn" data-metric="mode">Mode Process</button>
+                        <button type="button" class="tab-btn" data-metric="dispersion">Variance & Std Dev</button>
+                    </div>
+                    <ol class="process-list" id="processList"></ol>
+                </div>
+
+                <div class="summary-grid" id="summaryGrid"></div>
+            </article>
+        </section>
+
+        <section class="panel table-panel fade-in-up delay-2">
+            <div class="table-header-row">
+                <h2>Full Table</h2>
+                <button class="btn ghost compact" id="toggleTableBtn" type="button">Collapse</button>
+            </div>
+            <div class="table-scroll" id="fullTableWrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Class Interval</th>
+                            <th>Tally</th>
+                            <th>Frequency</th>
+                            <th>Midpoint</th>
+                            <th>Class Boundaries</th>
+                            <th>fx</th>
+                            <th>Cumulative Frequency</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fullTableBody">
+                        <tr>
+                            <td colspan="7" class="empty-cell">No computed data yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div class="tutorial-overlay" id="tutorialOverlay" aria-hidden="true">
+        <div class="tutorial-scene" aria-hidden="true">
+            <div class="ring ring-1"></div>
+            <div class="ring ring-2"></div>
+            <div class="ring ring-3"></div>
+            <img class="tutorial-skull tutorial-skull-a" src="../IMAGES/skull.png" alt="tutorial decoration">
+            <img class="tutorial-skull tutorial-skull-b" src="../IMAGES/skull2.png" alt="tutorial decoration">
+        </div>
+        <img class="tutorial-kuromi" src="../IMAGES/Kuromi_render.png" alt="Kuromi tutorial guide">
+        <div class="tutorial-card">
+            <h3 id="tutorialTitle">Welcome</h3>
+            <p id="tutorialText">Let us quickly walk through this new single-page version.</p>
+            <div class="tutorial-actions">
+                <button id="tutorialSkipBtn" class="btn ghost compact" type="button">Skip</button>
+                <button id="tutorialNextBtn" class="btn primary compact" type="button">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="OnePage.js"></script>
+</body>
+</html>
